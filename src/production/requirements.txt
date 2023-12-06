@@ -6,3 +6,4 @@ pyprojroot==0.2.0
 skimpy==0.0.8
 openpyxl==3.1.2
 holidays==0.28
+plotly==5.15.0
