@@ -1,0 +1,13 @@
+,Hosptial ID,Driver,Impact
+0,1,Age 60+,0.38
+1,1,High Cholesterol,0.15
+2,1,Diabetes,0.03
+3,1,Preventative Services,-0.29
+4,3,Age 60+,0.38
+5,3,High Cholesterol,0.31
+6,3,Diabetes,0.25
+7,3,Preventative Services,-0.33
+8,2,Age 60+,0.42
+9,2,High Cholesterol,0.24
+10,2,Diabetes,0.09
+11,2,Preventative Services,-0.09
