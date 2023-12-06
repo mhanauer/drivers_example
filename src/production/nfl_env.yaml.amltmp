@@ -1,0 +1,16 @@
+name: nfl_env
+channels:
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - azureml-defaults
+    - pandas==1.4.1
+    - streamlit==1.21.0
+    - pulp==2.7.0
+    - beautifulsoup4==4.11.1
+    - numpy==1.23.5
+    - pyprojroot==0.2.0
+    - skimpy==0.0.8
+    - schedule==1.2.0
