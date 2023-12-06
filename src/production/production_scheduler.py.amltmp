@@ -10,7 +10,12 @@ os.chdir(path_data)
 data = pd.read_csv("data_shap_hospital.csv")[["Hospital ID", "Driver", "Impact"]]
 
 # Streamlit title
-st.title("Hospital Impact Analysis")
+st.title("Hospital Drivers Analysis")
+
+st.markdown("""
+This is a demo with synthetic data based on a model predicting an ER visit within the last 30 days. 
+The results below show the average impact of the driver on the outcome in percentage.
+""")
 
 # Sidebar for hospital selection
 hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data["Hospital ID"].unique())
