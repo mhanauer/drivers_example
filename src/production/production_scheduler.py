@@ -16,8 +16,7 @@ data = pd.read_csv("data_shap_hospital.csv")[["Hospital ID", "Driver", "Impact"]
 st.title("Hospital Drivers Analysis")
 
 st.markdown("""
-This is a demo with synthetic data based on a model predicting an ER visit within the last 30 days. 
-The results below show the average impact of the driver on the a ER visit in percentages.  For example if Age 60+ has a percentage of -17% this means on average a member above 60 will be 17% more likely to have an ER visit.
+"This demo uses synthetic data based on a model that predicts emergency room (ER) visits within the last 30 days. The results displayed below represent the average impact of various factors (referred to as 'drivers') on the probability of ER visits within the population. For instance, if the 'Age 60+' driver shows a percentage of 17%, this indicates that, on average, individuals aged 60 and above are 17% more likely to have an ER visit. Conversely, a negative percentage implies a lower probability of an ER visit."
 """)
 
 # Sidebar for hospital selection
@@ -134,7 +133,7 @@ data_predict_adjust.rename(columns={
 
 # Make predictions
 predictions = model.predict(data_predict_adjust)
-predictions_pd = pd.DataFrame(predictions).rename(columns={0: 'Predictions'})
+predictions_pd = pd.DataFrame(predictions).rename(columns={0: '% predicted ER visits'})
 
 # Combine predictions with Hospital ID
 data_predictions_hospital_id = pd.concat(
@@ -145,9 +144,9 @@ data_predictions_hospital_id = pd.concat(
 data_predictions_hospital_group = (
     data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(2)
 )
-noise = np.random.uniform(-0.02, 0.02, data_predictions_hospital_group["Predictions"].shape)
-data_predictions_hospital_group["Predictions"] = (
-    data_predictions_hospital_group["Predictions"] + noise
+noise = np.random.uniform(-0.02, 0.02, data_predictions_hospital_group["% predicted ER visits"].shape)
+data_predictions_hospital_group["% predicted ER visits"] = (
+    data_predictions_hospital_group["% predicted ER visits"] + noise
 ).round(2)
 
 # Display Hospital Averages in Streamlit
