@@ -17,7 +17,7 @@ st.title("Hospital Drivers Analysis")
 
 st.markdown("""
 This is a demo with synthetic data based on a model predicting an ER visit within the last 30 days. 
-The results below show the average impact of the driver on the outcome in percentage.
+The results below show the average impact of the driver on the a ER visit in percentages.  For example if Age 60+ has a percentage of -17% this means on average a member above 60 will be 17% more likely to have an ER visit.
 """)
 
 # Sidebar for hospital selection
@@ -151,7 +151,12 @@ data_predictions_hospital_group["Predictions"] = (
 ).round(2)
 
 # Display Hospital Averages in Streamlit
-st.markdown("### Hospital Averages for Selected Hospital")
+st.markdown("### Hospital ER visit predictions based on changes in features by selected hospital")
+
+st.markdown("""
+Use the sliders on the left side to change the percentage of each feature present in the member population.
+""")
+
 selected_hospital_avg = data_predictions_hospital_group[data_predictions_hospital_group["Hospital ID"] == hospital_id]
 st.write(selected_hospital_avg)
 
