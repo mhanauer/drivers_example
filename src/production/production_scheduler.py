@@ -16,7 +16,7 @@ data = pd.read_csv("data_shap_hospital.csv")[["Hospital ID", "Driver", "Impact"]
 st.title("Hospital Drivers Analysis")
 
 st.markdown("""
-"This demo uses synthetic data based on a model that predicts emergency room (ER) visits within the last 30 days. The results displayed below represent the average impact of various factors (referred to as 'drivers') on the probability of ER visits within the population. For instance, if the 'Age 60+' driver shows a percentage of 17%, this indicates that, on average, individuals aged 60 and above are 17% more likely to have an ER visit. Conversely, a negative percentage implies a lower probability of an ER visit."
+This demo uses synthetic data based on a model that predicts emergency room (ER) visits within the last 30 days. The results displayed below represent the average impact of various factors (referred to as 'drivers') on the probability of ER visits within the population. For instance, if the 'Age 60+' driver shows a percentage of 17%, this indicates that, on average, individuals aged 60 and above are 17% more likely to have an ER visit. Conversely, a negative percentage implies a lower probability of an ER visit.
 """)
 
 # Sidebar for hospital selection
