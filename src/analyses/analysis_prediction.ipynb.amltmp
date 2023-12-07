@@ -1,0 +1,401 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "%load_ext lab_black"
+      ],
+      "outputs": [],
+      "execution_count": 1,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "outputs": [],
+      "execution_count": null,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyprojroot import here\n",
+        "import os\n",
+        "from skimpy import clean_columns\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import xgboost as xgb\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "import shap\n",
+        "import joblib\n",
+        "from joblib import load\n",
+        "\n",
+        "path_data = here(\"./data\")\n",
+        "os.chdir(path_data)\n",
+        "\n",
+        "data = pd.read_csv(\"data_er_visits.csv\").rename(columns={\"Unnamed: 0\": \"Member ID\"})\n",
+        "data_no_member_id = data.drop(columns=[\"Member ID\"])\n",
+        "data_predict = data_no_member_id.drop(columns=[\"Hospital ID\", \"ER Visit\"])\n",
+        "\n",
+        "# Load the model\n",
+        "model = joblib.load(\"model_drivers.joblib\")"
+      ],
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "SystemError",
+          "evalue": "initialization of _internal failed without raising an exception",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mSystemError\u001b[0m                               Traceback (most recent call last)",
+            "Cell \u001b[0;32mIn[2], line 6\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mpandas\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m \u001b[38;5;21;01mpd\u001b[39;00m\n\u001b[1;32m      5\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mnumpy\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m \u001b[38;5;21;01mnp\u001b[39;00m\n\u001b[0;32m----> 6\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mxgboost\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m \u001b[38;5;21;01mxgb\u001b[39;00m\n\u001b[1;32m      7\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01msklearn\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mmodel_selection\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m train_test_split\n\u001b[1;32m      8\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mshap\u001b[39;00m\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/xgboost/__init__.py:9\u001b[0m\n\u001b[1;32m      2\u001b[0m \u001b[38;5;124;03m\"\"\"XGBoost: eXtreme Gradient Boosting library.\u001b[39;00m\n\u001b[1;32m      3\u001b[0m \n\u001b[1;32m      4\u001b[0m \u001b[38;5;124;03mContributors: https://github.com/dmlc/xgboost/blob/master/CONTRIBUTORS.md\u001b[39;00m\n\u001b[1;32m      5\u001b[0m \u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[1;32m      7\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mos\u001b[39;00m\n\u001b[0;32m----> 9\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mcore\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m DMatrix, DeviceQuantileDMatrix, Booster\n\u001b[1;32m     10\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mtraining\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m train, cv\n\u001b[1;32m     11\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m rabit  \u001b[38;5;66;03m# noqa\u001b[39;00m\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/xgboost/core.py:22\u001b[0m\n\u001b[1;32m     19\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mnumpy\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m \u001b[38;5;21;01mnp\u001b[39;00m\n\u001b[1;32m     20\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mscipy\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01msparse\u001b[39;00m\n\u001b[0;32m---> 22\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mcompat\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m (STRING_TYPES, DataFrame, py_str, PANDAS_INSTALLED,\n\u001b[1;32m     23\u001b[0m                      lazy_isinstance)\n\u001b[1;32m     24\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mlibpath\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m find_lib_path\n\u001b[1;32m     26\u001b[0m \u001b[38;5;66;03m# c_bst_ulong corresponds to bst_ulong defined in xgboost/c_api.h\u001b[39;00m\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/xgboost/compat.py:115\u001b[0m\n\u001b[1;32m    111\u001b[0m     DASK_INSTALLED \u001b[38;5;241m=\u001b[39m \u001b[38;5;28;01mFalse\u001b[39;00m\n\u001b[1;32m    114\u001b[0m \u001b[38;5;28;01mtry\u001b[39;00m:\n\u001b[0;32m--> 115\u001b[0m     \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01msparse\u001b[39;00m\n\u001b[1;32m    116\u001b[0m     \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mscipy\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01msparse\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m \u001b[38;5;21;01mscipy_sparse\u001b[39;00m\n\u001b[1;32m    117\u001b[0m     SCIPY_INSTALLED \u001b[38;5;241m=\u001b[39m \u001b[38;5;28;01mTrue\u001b[39;00m\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/sparse/__init__.py:1\u001b[0m\n\u001b[0;32m----> 1\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01m_coo\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m COO, as_coo\n\u001b[1;32m      2\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01m_compressed\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m GCXS\n\u001b[1;32m      3\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01m_dok\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m DOK\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/sparse/_coo/__init__.py:1\u001b[0m\n\u001b[0;32m----> 1\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mcore\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m COO, as_coo\n\u001b[1;32m      2\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mcommon\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m (\n\u001b[1;32m      3\u001b[0m     concatenate,\n\u001b[1;32m      4\u001b[0m     clip,\n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m     22\u001b[0m     diagonalize,\n\u001b[1;32m     23\u001b[0m )\n\u001b[1;32m     25\u001b[0m __all__ \u001b[38;5;241m=\u001b[39m [\n\u001b[1;32m     26\u001b[0m     \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mCOO\u001b[39m\u001b[38;5;124m\"\u001b[39m,\n\u001b[1;32m     27\u001b[0m     \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mas_coo\u001b[39m\u001b[38;5;124m\"\u001b[39m,\n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m     47\u001b[0m     \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mdiagonalize\u001b[39m\u001b[38;5;124m\"\u001b[39m,\n\u001b[1;32m     48\u001b[0m ]\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/sparse/_coo/core.py:9\u001b[0m\n\u001b[1;32m      6\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mwarnings\u001b[39;00m\n\u001b[1;32m      8\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mnumpy\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m \u001b[38;5;21;01mnp\u001b[39;00m\n\u001b[0;32m----> 9\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\n\u001b[1;32m     10\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01mscipy\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01msparse\u001b[39;00m\n\u001b[1;32m     11\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumpy\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mlib\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mmixins\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m NDArrayOperatorsMixin\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/numba/__init__.py:42\u001b[0m\n\u001b[1;32m     38\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mcore\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mdecorators\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m (cfunc, generated_jit, jit, njit, stencil,\n\u001b[1;32m     39\u001b[0m                                    jit_module)\n\u001b[1;32m     41\u001b[0m \u001b[38;5;66;03m# Re-export vectorize decorators and the thread layer querying function\u001b[39;00m\n\u001b[0;32m---> 42\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mnp\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mufunc\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m (vectorize, guvectorize, threading_layer,\n\u001b[1;32m     43\u001b[0m                             get_num_threads, set_num_threads)\n\u001b[1;32m     45\u001b[0m \u001b[38;5;66;03m# Re-export Numpy helpers\u001b[39;00m\n\u001b[1;32m     46\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mnp\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mnumpy_support\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m carray, farray, from_dtype\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/numba/np/ufunc/__init__.py:3\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[38;5;66;03m# -*- coding: utf-8 -*-\u001b[39;00m\n\u001b[0;32m----> 3\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mnp\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mufunc\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mdecorators\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m Vectorize, GUVectorize, vectorize, guvectorize\n\u001b[1;32m      4\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mnp\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mufunc\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01m_internal\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m PyUFunc_None, PyUFunc_Zero, PyUFunc_One\n\u001b[1;32m      5\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mnp\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mufunc\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m _internal, array_exprs\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/numba/np/ufunc/decorators.py:3\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[38;5;28;01mimport\u001b[39;00m \u001b[38;5;21;01minspect\u001b[39;00m\n\u001b[0;32m----> 3\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mnp\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mufunc\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m _internal\n\u001b[1;32m      4\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mnp\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mufunc\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mparallel\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m ParallelUFuncBuilder, ParallelGUFuncBuilder\n\u001b[1;32m      6\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mnumba\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mcore\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mregistry\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m DelayedRegistry\n",
+            "\u001b[0;31mSystemError\u001b[0m: initialization of _internal failed without raising an exception"
+          ]
+        }
+      ],
+      "execution_count": 2,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1701960206181
+        }
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Get the actual percentage of members with ER visits in the last 30 days for each hospital\n",
+        "\n",
+        "Show them their average percentages for all four variables.\n",
+        "\n",
+        "Add some noise for the features by Hospital ID\n",
+        "\n",
+        "Then create a function to allow for simulated data with the exact percentage that someone shows"
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data_no_member_id.groupby(\"Hospital ID\").mean().reset_index().round(2)"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 4,
+          "data": {
+            "text/plain": "   Hospital ID  Age 60+  High Cholesterol  Diabetes  Preventative Services  \\\n0            1     0.29              0.41      0.25                   0.51   \n1            2     0.28              0.40      0.24                   0.50   \n2            3     0.29              0.40      0.24                   0.49   \n\n   ER Visit  \n0      0.28  \n1      0.27  \n2      0.28  ",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Age 60+</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n      <th>ER Visit</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>0.29</td>\n      <td>0.41</td>\n      <td>0.25</td>\n      <td>0.51</td>\n      <td>0.28</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>0.28</td>\n      <td>0.40</td>\n      <td>0.24</td>\n      <td>0.50</td>\n      <td>0.27</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>0.29</td>\n      <td>0.40</td>\n      <td>0.24</td>\n      <td>0.49</td>\n      <td>0.28</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 4,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1701958094591
+        }
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Step: Create a function that generates "
+      ],
+      "metadata": {
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "\n",
+        "\n",
+        "def adjust_binary_percentages(df, **column_percentages):\n",
+        "    \"\"\"\n",
+        "    Adjusts the percentage of 1's in each specified column of a binary DataFrame.\n",
+        "\n",
+        "    Args:\n",
+        "    df (pd.DataFrame): DataFrame with binary values.\n",
+        "    column_percentages (dict): A dictionary where keys are column names and values are the new desired percentages of 1's.\n",
+        "\n",
+        "    Returns:\n",
+        "    pd.DataFrame: Modified DataFrame.\n",
+        "    \"\"\"\n",
+        "\n",
+        "    for column, percentage in column_percentages.items():\n",
+        "        if column not in df.columns:\n",
+        "            raise ValueError(f\"Column {column} not found in DataFrame\")\n",
+        "\n",
+        "        # Calculate current percentage of 1's\n",
+        "        current_percentage = df[column].mean()\n",
+        "\n",
+        "        # Calculate the desired number of 1's\n",
+        "        target_count = int(df.shape[0] * percentage)\n",
+        "\n",
+        "        # Find indices where changes are needed\n",
+        "        ones_indices = df[df[column] == 1].index\n",
+        "        zeros_indices = df[df[column] == 0].index\n",
+        "\n",
+        "        if target_count > ones_indices.size:  # Need to add more 1's\n",
+        "            change_count = target_count - ones_indices.size\n",
+        "            indices_to_change = np.random.choice(\n",
+        "                zeros_indices, change_count, replace=False\n",
+        "            )\n",
+        "            df.loc[indices_to_change, column] = 1\n",
+        "        else:  # Need to remove some 1's\n",
+        "            change_count = ones_indices.size - target_count\n",
+        "            indices_to_change = np.random.choice(\n",
+        "                ones_indices, change_count, replace=False\n",
+        "            )\n",
+        "            df.loc[indices_to_change, column] = 0\n",
+        "\n",
+        "    return df"
+      ],
+      "outputs": [],
+      "execution_count": 7,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1701958933298
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data_predict_adjust = clean_columns(data_predict.copy())\n",
+        "adjust_binary_percentages(\n",
+        "    df=data_predict_adjust, age_60 = .4, high_cholesterol = .5, \n",
+        ")"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 10,
+          "data": {
+            "text/plain": "      age_60  high_cholesterol  diabetes  preventative_services\n0          0                 0         0                      1\n1          1                 0         0                      0\n2          1                 0         0                      1\n3          0                 1         0                      0\n4          0                 0         0                      1\n...      ...               ...       ...                    ...\n9995       1                 1         1                      1\n9996       1                 0         0                      1\n9997       1                 0         0                      0\n9998       0                 0         0                      0\n9999       0                 0         0                      0\n\n[10000 rows x 4 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>age_60</th>\n      <th>high_cholesterol</th>\n      <th>diabetes</th>\n      <th>preventative_services</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>0</td>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>9995</th>\n      <td>1</td>\n      <td>1</td>\n      <td>1</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9996</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9997</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9998</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9999</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n  </tbody>\n</table>\n<p>10000 rows × 4 columns</p>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 10,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1701959333866
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import xgboost\n",
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "from sklearn.inspection import plot_partial_dependence\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "# Creating a synthetic dataset\n",
+        "X, y = np.random.rand(100, 5), np.random.randint(0, 2, 100)\n",
+        "X = pd.DataFrame(X, columns=[f'feature_{i}' for i in range(1, 6)])\n",
+        "y = pd.Series(y, name='target')\n",
+        "\n",
+        "# Splitting the dataset into training and testing sets\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+        "\n",
+        "# Training an XGBoost model\n",
+        "model = xgboost.XGBClassifier()\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "# Selecting the feature for which we want to plot the ICE plot\n",
+        "feature_to_plot = 'feature_1'\n",
+        "\n",
+        "# Generating the ICE plot\n",
+        "fig, ax = plt.subplots(figsize=(10, 6))\n",
+        "plot_partial_dependence(model, features=[feature_to_plot], X=X_train, ax=ax, kind='individual', grid_resolution=20)\n",
+        "plt.show()\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": "[14:38:43] WARNING: /mnt/xgboost/src/learner.cc:1061: Starting in XGBoost 1.3.0, the default evaluation metric used with the objective 'binary:logistic' was changed from 'error' to 'logloss'. Explicitly set eval_metric if you'd like to restore the old behavior.\n"
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "The use of label encoder in XGBClassifier is deprecated and will be removed in a future release. To remove this warning, do the following: 1) Pass option use_label_encoder=False when constructing XGBClassifier object; and 2) Encode your labels (y) as integers starting with 0, i.e. 0, 1, 2, ..., [num_class - 1].\npandas.Int64Index is deprecated and will be removed from pandas in a future version. Use pandas.Index with the appropriate dtype instead.\n"
+        },
+        {
+          "output_type": "error",
+          "ename": "TypeError",
+          "evalue": "plot_partial_dependence() got an unexpected keyword argument 'kind'",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mTypeError\u001b[0m                                 Traceback (most recent call last)",
+            "Cell \u001b[0;32mIn[11], line 25\u001b[0m\n\u001b[1;32m     23\u001b[0m \u001b[38;5;66;03m# Generating the ICE plot\u001b[39;00m\n\u001b[1;32m     24\u001b[0m fig, ax \u001b[38;5;241m=\u001b[39m plt\u001b[38;5;241m.\u001b[39msubplots(figsize\u001b[38;5;241m=\u001b[39m(\u001b[38;5;241m10\u001b[39m, \u001b[38;5;241m6\u001b[39m))\n\u001b[0;32m---> 25\u001b[0m \u001b[43mplot_partial_dependence\u001b[49m\u001b[43m(\u001b[49m\u001b[43mmodel\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mfeatures\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43m[\u001b[49m\u001b[43mfeature_to_plot\u001b[49m\u001b[43m]\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mX\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43mX_train\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43max\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[43max\u001b[49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mkind\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[38;5;124;43mindividual\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mgrid_resolution\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;241;43m20\u001b[39;49m\u001b[43m)\u001b[49m\n\u001b[1;32m     26\u001b[0m plt\u001b[38;5;241m.\u001b[39mshow()\n",
+            "\u001b[0;31mTypeError\u001b[0m: plot_partial_dependence() got an unexpected keyword argument 'kind'"
+          ]
+        }
+      ],
+      "execution_count": 11,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1701959923734
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Make predictions (opxtional, to evaluate model)\n",
+        "predictions = model.predict(data_predict)"
+      ],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "pandas.Int64Index is deprecated and will be removed from pandas in a future version. Use pandas.Index with the appropriate dtype instead.\n"
+        }
+      ],
+      "execution_count": 5,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1701958097895
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python38-azureml",
+      "language": "python",
+      "display_name": "Python 3.8 - AzureML"
+    },
+    "language_info": {
+      "name": "python",
+      "version": "3.8.5",
+      "mimetype": "text/x-python",
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "pygments_lexer": "ipython3",
+      "nbconvert_exporter": "python",
+      "file_extension": ".py"
+    },
+    "microsoft": {
+      "ms_spell_check": {
+        "ms_spell_check_language": "en"
+      },
+      "host": {
+        "AzureML": {
+          "notebookHasBeenCompleted": true
+        }
+      }
+    },
+    "kernel_info": {
+      "name": "python38-azureml"
+    },
+    "nteract": {
+      "version": "nteract-front-end@1.0.0"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 2
+}
