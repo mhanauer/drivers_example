@@ -8,49 +8,30 @@ import os
 from skimpy import clean_columns
 
 # Function to adjust binary percentages
-import pandas as pd
-import numpy as np
-
-
 def adjust_binary_percentages(df, **column_percentages):
     """
     Adjusts the percentage of 1's in each specified column of a binary DataFrame.
-
     Args:
     df (pd.DataFrame): DataFrame with binary values.
     column_percentages (dict): A dictionary where keys are column names and values are the new desired percentages of 1's.
-
     Returns:
     pd.DataFrame: Modified DataFrame.
     """
-
     for column, percentage in column_percentages.items():
         if column not in df.columns:
             raise ValueError(f"Column {column} not found in DataFrame")
-
-        # Calculate current percentage of 1's
         current_percentage = df[column].mean()
-
-        # Calculate the desired number of 1's
         target_count = int(df.shape[0] * percentage)
-
-        # Find indices where changes are needed
         ones_indices = df[df[column] == 1].index
         zeros_indices = df[df[column] == 0].index
-
         if target_count > ones_indices.size:  # Need to add more 1's
             change_count = target_count - ones_indices.size
-            indices_to_change = np.random.choice(
-                zeros_indices, change_count, replace=False
-            )
+            indices_to_change = np.random.choice(zeros_indices, change_count, replace=False)
             df.loc[indices_to_change, column] = 1
         else:  # Need to remove some 1's
             change_count = ones_indices.size - target_count
-            indices_to_change = np.random.choice(
-                ones_indices, change_count, replace=False
-            )
+            indices_to_change = np.random.choice(ones_indices, change_count, replace=False)
             df.loc[indices_to_change, column] = 0
-
     return df
 
 # Load data and model
@@ -94,8 +75,6 @@ def main():
         color="Color",
         labels={"Impact": "Impact Value", "Driver": "Driver Factor"},
     )
-
-    # Customizing the layout
     fig.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         xaxis=dict(showticklabels=False, title=None),
@@ -103,20 +82,18 @@ def main():
     )
     fig.update_traces(marker_coloraxis=None)
     fig.update_traces(texttemplate="%{text}", textposition="inside")
-
-    # Display the plot in Streamlit
     st.plotly_chart(fig)
 
     # Streamlit title for the PMPM prediction part
     st.title("PMPM Cost Prediction")
 
-    # Sliders for feature adjustment
-    bp_percentage = st.slider('High Blood Pressure Percentage', 0.1, 1.0, 0.1, step=0.1)
-    chol_percentage = st.slider('High Cholesterol Percentage', 0.1, 1.0, 0.1, step=0.1)
-    diabetes_percentage = st.slider('Diabetes Percentage', 0.1, 1.0, 0.1, step=0.1)
-    preventive_percentage = st.slider('Preventative Services Percentage', 0.1, 1.0, 0.1, step=0.1)
+    # Sliders for feature adjustment in the sidebar
+    bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', 0.1, 1.0, 0.1, step=0.1)
+    chol_percentage = st.sidebar.slider('High Cholesterol Percentage', 0.1, 1.0, 0.1, step=0.1)
+    diabetes_percentage = st.sidebar.slider('Diabetes Percentage', 0.1, 1.0, 0.1, step=0.1)
+    preventive_percentage = st.sidebar.slider('Preventative Services Percentage', 0.1, 1.0, 0.1, step=0.1)
 
-    if st.button("Generate Predictions"):
+    if st.sidebar.button("Generate Predictions"):
         with st.spinner('Processing...'):
             data_predict = data_pmpm.drop(columns=["Hospital ID", "Per Member Per Month Cost"])
             data_predict_adjust = clean_columns(data_predict.copy())
@@ -142,6 +119,8 @@ def main():
             data_predictions_hospital_group = (
                 data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(2)
             )
+            st.write("Predictions per Hospital ID:")
+            st.dataframe(data_predictions_hospital_group)
 
 if __name__ == "__main__":
     main()
