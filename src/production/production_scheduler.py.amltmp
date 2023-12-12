@@ -7,31 +7,49 @@ from pyprojroot import here
 import os
 from skimpy import clean_columns
 
-# Function to adjust binary percentages
+import pandas as pd
+import numpy as np
+
+
 def adjust_binary_percentages(df, **column_percentages):
     """
     Adjusts the percentage of 1's in each specified column of a binary DataFrame.
+
     Args:
     df (pd.DataFrame): DataFrame with binary values.
     column_percentages (dict): A dictionary where keys are column names and values are the new desired percentages of 1's.
+
     Returns:
     pd.DataFrame: Modified DataFrame.
     """
+
     for column, percentage in column_percentages.items():
         if column not in df.columns:
             raise ValueError(f"Column {column} not found in DataFrame")
+
+        # Calculate current percentage of 1's
         current_percentage = df[column].mean()
+
+        # Calculate the desired number of 1's
         target_count = int(df.shape[0] * percentage)
+
+        # Find indices where changes are needed
         ones_indices = df[df[column] == 1].index
         zeros_indices = df[df[column] == 0].index
+
         if target_count > ones_indices.size:  # Need to add more 1's
             change_count = target_count - ones_indices.size
-            indices_to_change = np.random.choice(zeros_indices, change_count, replace=False)
+            indices_to_change = np.random.choice(
+                zeros_indices, change_count, replace=False
+            )
             df.loc[indices_to_change, column] = 1
         else:  # Need to remove some 1's
             change_count = ones_indices.size - target_count
-            indices_to_change = np.random.choice(ones_indices, change_count, replace=False)
+            indices_to_change = np.random.choice(
+                ones_indices, change_count, replace=False
+            )
             df.loc[indices_to_change, column] = 0
+
     return df
 
 # Load data and model
@@ -62,7 +80,8 @@ def main():
     df["AbsImpact"] = df["Impact"].abs()
     df = df.sort_values(by="AbsImpact", ascending=False).iloc[::-1]
     df = df.drop("AbsImpact", axis=1)
-    df["ImpactText"] = df["Impact"].apply(lambda x: f"{x:.0%}")
+    # Round Impact to nearest dollar and format as text
+    df["ImpactText"] = df["Impact"].apply(lambda x: f"${round(x):,}")
     df["Color"] = df["Impact"].apply(lambda x: "blue" if x > 0 else "red")
 
     # Create horizontal bar chart using Plotly
@@ -114,12 +133,13 @@ def main():
                 inplace=True,
             )
             predictions = model.predict(data_predict_adjust)
-            predictions_pd = pd.DataFrame(predictions).rename(columns={0: "Predictions"})
+            predictions_rounded = np.round(predictions)  # Round to nearest dollar
+            predictions_pd = pd.DataFrame(predictions_rounded).rename(columns={0: "Predictions"})
             data_predictions_hospital_id = pd.concat([data_pmpm["Hospital ID"], predictions_pd], axis=1)
             data_predictions_hospital_group = (
-                data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(2)
+                data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(0)  # Round to nearest dollar
             )
-            st.write("Predictions per Hospital ID:")
+            st.write("Predictions per Hospital ID")
             st.dataframe(data_predictions_hospital_group)
 
 if __name__ == "__main__":
