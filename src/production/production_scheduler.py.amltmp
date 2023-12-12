@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import plotly.express as px
 from pyprojroot import here
 import os
 from skimpy import clean_columns
@@ -56,12 +57,57 @@ def adjust_binary_percentages(df, **column_percentages):
 def load_data_model():
     path_data = here("./data")
     os.chdir(path_data)
-    data = pd.read_csv("data_pmpm.csv")
+    data_pmpm = pd.read_csv("data_pmpm.csv")
+    data_shap = pd.read_csv("data_shap_hospital.csv")
     model = joblib.load("model_drivers.joblib")
-    return data, model
+    return data_pmpm, data_shap, model
 
 # Streamlit app layout
 def main():
+    # Streamlit title for the initial part of the app
+    st.title("Hospital Drivers Analysis")
+
+    st.markdown("""
+    This demo uses synthetic data based on a model that predicts emergency room (ER) visits within the last 30 days. The results displayed below represent the average impact of various factors (referred to as 'drivers') on the probability of ER visits within the population.
+    """)
+
+    data_pmpm, data_shap, model = load_data_model()
+
+    # Sidebar for hospital selection
+    hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data_shap["Hospital ID"].unique())
+
+    # Filter data based on selected hospital
+    df = data_shap[data_shap["Hospital ID"] == hospital_id]
+    df["AbsImpact"] = df["Impact"].abs()
+    df = df.sort_values(by="AbsImpact", ascending=False).iloc[::-1]
+    df = df.drop("AbsImpact", axis=1)
+    df["ImpactText"] = df["Impact"].apply(lambda x: f"{x:.0%}")
+    df["Color"] = df["Impact"].apply(lambda x: "blue" if x > 0 else "red")
+
+    # Create horizontal bar chart using Plotly
+    fig = px.bar(
+        df,
+        x="Impact",
+        y="Driver",
+        orientation="h",
+        text="ImpactText",
+        color="Color",
+        labels={"Impact": "Impact Value", "Driver": "Driver Factor"},
+    )
+
+    # Customizing the layout
+    fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(showticklabels=False, title=None),
+        showlegend=False,
+    )
+    fig.update_traces(marker_coloraxis=None)
+    fig.update_traces(texttemplate="%{text}", textposition="inside")
+
+    # Display the plot in Streamlit
+    st.plotly_chart(fig)
+
+    # Streamlit title for the PMPM prediction part
     st.title("PMPM Cost Prediction")
 
     # Sliders for feature adjustment
@@ -70,11 +116,9 @@ def main():
     diabetes_percentage = st.slider('Diabetes Percentage', 0.1, 1.0, 0.1, step=0.1)
     preventive_percentage = st.slider('Preventative Services Percentage', 0.1, 1.0, 0.1, step=0.1)
 
-    data, model = load_data_model()
-
     if st.button("Generate Predictions"):
         with st.spinner('Processing...'):
-            data_predict = data.drop(columns=["Hospital ID", "Per Member Per Month Cost"])
+            data_predict = data_pmpm.drop(columns=["Hospital ID", "Per Member Per Month Cost"])
             data_predict_adjust = clean_columns(data_predict.copy())
             data_predict_adjust = adjust_binary_percentages(
                 df=data_predict_adjust,
@@ -94,11 +138,7 @@ def main():
             )
             predictions = model.predict(data_predict_adjust)
             predictions_pd = pd.DataFrame(predictions).rename(columns={0: "Predictions"})
-            data_predictions_hospital_id = pd.concat([data["Hospital ID"], predictions_pd], axis=1)
+            data_predictions_hospital_id = pd.concat([data_pmpm["Hospital ID"], predictions_pd], axis=1)
             data_predictions_hospital_group = (
                 data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(2)
             )
-            st.write(data_predictions_hospital_group)
-
-if __name__ == "__main__":
-    main()
