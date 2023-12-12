@@ -6,7 +6,7 @@
         "%load_ext lab_black"
       ],
       "outputs": [],
-      "execution_count": 30,
+      "execution_count": 1,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -36,14 +36,13 @@
         "path_data = here(\"./data\")\n",
         "os.chdir(path_data)\n",
         "\n",
-        "data = pd.read_csv(\"data_er_visits.csv\").rename(columns={\"Unnamed: 0\": \"Member ID\"})\n",
-        "data_no_member_id = data.drop(columns=[\"Member ID\"])\n",
-        "data_predict = data_no_member_id.drop(columns=[\"Hospital ID\", \"ER Visit\"])\n",
+        "data = pd.read_csv(\"data_pmpm.csv\")\n",
+        "data_predict = data.drop(columns=[\"Hospital ID\", \"Per Member Per Month Cost\"])\n",
         "# Load the model\n",
         "model = joblib.load(\"model_drivers.joblib\")"
       ],
       "outputs": [],
-      "execution_count": 4,
+      "execution_count": 8,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -55,7 +54,7 @@
           }
         },
         "gather": {
-          "logged": 1701962343315
+          "logged": 1702404157829
         }
       }
     },
@@ -81,20 +80,20 @@
     {
       "cell_type": "code",
       "source": [
-        "data_no_member_id.groupby(\"Hospital ID\").mean().reset_index().round(2)"
+        "data.groupby(\"Hospital ID\").mean().reset_index().round(2)"
       ],
       "outputs": [
         {
           "output_type": "execute_result",
-          "execution_count": 6,
+          "execution_count": 9,
           "data": {
-            "text/plain": "   Hospital ID  Age 60+  High Cholesterol  Diabetes  Preventative Services  \\\n0            1     0.29              0.41      0.25                   0.51   \n1            2     0.28              0.40      0.24                   0.50   \n2            3     0.29              0.40      0.24                   0.49   \n\n   ER Visit  \n0      0.28  \n1      0.27  \n2      0.28  ",
-            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Age 60+</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n      <th>ER Visit</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>0.29</td>\n      <td>0.41</td>\n      <td>0.25</td>\n      <td>0.51</td>\n      <td>0.28</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>0.28</td>\n      <td>0.40</td>\n      <td>0.24</td>\n      <td>0.50</td>\n      <td>0.27</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>0.29</td>\n      <td>0.40</td>\n      <td>0.24</td>\n      <td>0.49</td>\n      <td>0.28</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+            "text/plain": "   Hospital ID  High Blood Pressure  High Cholesterol  Diabetes  \\\n0            1                 0.29              0.41      0.25   \n1            2                 0.28              0.40      0.24   \n2            3                 0.29              0.40      0.24   \n\n   Preventative Services  Per Member Per Month Cost  \n0                   0.51                    5123.60  \n1                   0.50                    5005.30  \n2                   0.49                    5063.65  ",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>High Blood Pressure</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n      <th>Per Member Per Month Cost</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>0.29</td>\n      <td>0.41</td>\n      <td>0.25</td>\n      <td>0.51</td>\n      <td>5123.60</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>0.28</td>\n      <td>0.40</td>\n      <td>0.24</td>\n      <td>0.50</td>\n      <td>5005.30</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>0.29</td>\n      <td>0.40</td>\n      <td>0.24</td>\n      <td>0.49</td>\n      <td>5063.65</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
           },
           "metadata": {}
         }
       ],
-      "execution_count": 6,
+      "execution_count": 9,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -106,7 +105,7 @@
           }
         },
         "gather": {
-          "logged": 1701962359427
+          "logged": 1702404160018
         }
       }
     },
@@ -172,7 +171,7 @@
         "    return df"
       ],
       "outputs": [],
-      "execution_count": 7,
+      "execution_count": 10,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -184,7 +183,7 @@
           }
         },
         "gather": {
-          "logged": 1701962462898
+          "logged": 1702404161929
         }
       }
     },
@@ -192,30 +191,20 @@
       "cell_type": "code",
       "source": [
         "data_predict_adjust = clean_columns(data_predict.copy())\n",
-        "data_predict_adjust = adjust_binary_percentages(\n",
-        "    df=data_predict_adjust, age_60 = .1, high_cholesterol = .1, diabetes = .1, preventative_services=.7\n",
-        ")\n",
-        "data_predict_adjust.rename(columns={\n",
-        "    'age_60': 'Age 60+',\n",
-        "    'high_cholesterol': 'High Cholesterol',\n",
-        "    'diabetes': 'Diabetes',\n",
-        "    'preventative_services': 'Preventative Services'\n",
-        "}, inplace=True)\n",
-        "\n",
         "data_predict_adjust"
       ],
       "outputs": [
         {
           "output_type": "execute_result",
-          "execution_count": 26,
+          "execution_count": 11,
           "data": {
-            "text/plain": "      Age 60+  High Cholesterol  Diabetes  Preventative Services\n0           0                 0         0                      1\n1           1                 0         0                      0\n2           0                 0         0                      1\n3           0                 1         0                      0\n4           0                 0         0                      1\n...       ...               ...       ...                    ...\n9995        0                 1         1                      1\n9996        0                 0         0                      1\n9997        1                 0         0                      0\n9998        0                 0         0                      0\n9999        0                 0         0                      0\n\n[10000 rows x 4 columns]",
-            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Age 60+</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>0</td>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>9995</th>\n      <td>0</td>\n      <td>1</td>\n      <td>1</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9996</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9997</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9998</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9999</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n  </tbody>\n</table>\n<p>10000 rows × 4 columns</p>\n</div>"
+            "text/plain": "      high_blood_pressure  high_cholesterol  diabetes  preventative_services\n0                       0                 0         0                      1\n1                       1                 0         0                      0\n2                       1                 0         0                      1\n3                       0                 1         0                      0\n4                       0                 0         0                      1\n...                   ...               ...       ...                    ...\n9995                    1                 1         1                      1\n9996                    1                 0         0                      1\n9997                    1                 0         0                      0\n9998                    0                 0         0                      0\n9999                    0                 0         0                      0\n\n[10000 rows x 4 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>high_blood_pressure</th>\n      <th>high_cholesterol</th>\n      <th>diabetes</th>\n      <th>preventative_services</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>0</td>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>9995</th>\n      <td>1</td>\n      <td>1</td>\n      <td>1</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9996</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9997</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9998</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9999</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n  </tbody>\n</table>\n<p>10000 rows × 4 columns</p>\n</div>"
           },
           "metadata": {}
         }
       ],
-      "execution_count": 26,
+      "execution_count": 11,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -227,7 +216,56 @@
           }
         },
         "gather": {
-          "logged": 1701965468449
+          "logged": 1702404164951
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data_predict_adjust = adjust_binary_percentages(\n",
+        "    df=data_predict_adjust,\n",
+        "    high_blood_pressure=0.5,\n",
+        "    high_cholesterol=0.3,\n",
+        "    diabetes=0.4,\n",
+        "    preventative_services=0.5,\n",
+        ")\n",
+        "data_predict_adjust.rename(\n",
+        "    columns={\n",
+        "        \"high_blood_pressure\": \"High Blood Pressure\",\n",
+        "        \"high_cholesterol\": \"High Cholesterol\",\n",
+        "        \"diabetes\": \"Diabetes\",\n",
+        "        \"preventative_services\": \"Preventative Services\",\n",
+        "    },\n",
+        "    inplace=True,\n",
+        ")\n",
+        "\n",
+        "data_predict_adjust"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 12,
+          "data": {
+            "text/plain": "      High Blood Pressure  High Cholesterol  Diabetes  Preventative Services\n0                       1                 0         0                      1\n1                       1                 0         0                      0\n2                       1                 0         0                      1\n3                       0                 0         0                      0\n4                       1                 0         0                      1\n...                   ...               ...       ...                    ...\n9995                    1                 0         1                      1\n9996                    1                 0         1                      1\n9997                    1                 0         1                      0\n9998                    0                 0         1                      0\n9999                    1                 0         0                      0\n\n[10000 rows x 4 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>High Blood Pressure</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>9995</th>\n      <td>1</td>\n      <td>0</td>\n      <td>1</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9996</th>\n      <td>1</td>\n      <td>0</td>\n      <td>1</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9997</th>\n      <td>1</td>\n      <td>0</td>\n      <td>1</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9998</th>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9999</th>\n      <td>1</td>\n      <td>0</td>\n      <td>0</td>\n      <td>0</td>\n    </tr>\n  </tbody>\n</table>\n<p>10000 rows × 4 columns</p>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 12,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1702404167416
         }
       }
     },
@@ -247,15 +285,15 @@
         },
         {
           "output_type": "execute_result",
-          "execution_count": 27,
+          "execution_count": 13,
           "data": {
-            "text/plain": "      Predictions\n0               0\n1               1\n2               0\n3               0\n4               0\n...           ...\n9995            0\n9996            0\n9997            1\n9998            0\n9999            0\n\n[10000 rows x 1 columns]",
-            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Predictions</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>9995</th>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9996</th>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9997</th>\n      <td>1</td>\n    </tr>\n    <tr>\n      <th>9998</th>\n      <td>0</td>\n    </tr>\n    <tr>\n      <th>9999</th>\n      <td>0</td>\n    </tr>\n  </tbody>\n</table>\n<p>10000 rows × 1 columns</p>\n</div>"
+            "text/plain": "      Predictions\n0     4487.669922\n1     6468.939453\n2     4487.669922\n3     3977.527344\n4     4487.669922\n...           ...\n9995  7168.820801\n9996  7168.820801\n9997  8777.125977\n9998  6143.657227\n9999  6468.939453\n\n[10000 rows x 1 columns]",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Predictions</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>4487.669922</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>6468.939453</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>4487.669922</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>3977.527344</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>4487.669922</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>9995</th>\n      <td>7168.820801</td>\n    </tr>\n    <tr>\n      <th>9996</th>\n      <td>7168.820801</td>\n    </tr>\n    <tr>\n      <th>9997</th>\n      <td>8777.125977</td>\n    </tr>\n    <tr>\n      <th>9998</th>\n      <td>6143.657227</td>\n    </tr>\n    <tr>\n      <th>9999</th>\n      <td>6468.939453</td>\n    </tr>\n  </tbody>\n</table>\n<p>10000 rows × 1 columns</p>\n</div>"
           },
           "metadata": {}
         }
       ],
-      "execution_count": 27,
+      "execution_count": 13,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -267,39 +305,7 @@
           }
         },
         "gather": {
-          "logged": 1701965476390
-        }
-      }
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "data_no_member_id.groupby(\"Hospital ID\").mean().reset_index().round(2)"
-      ],
-      "outputs": [
-        {
-          "output_type": "execute_result",
-          "execution_count": 28,
-          "data": {
-            "text/plain": "   Hospital ID  Age 60+  High Cholesterol  Diabetes  Preventative Services  \\\n0            1     0.29              0.41      0.25                   0.51   \n1            2     0.28              0.40      0.24                   0.50   \n2            3     0.29              0.40      0.24                   0.49   \n\n   ER Visit  \n0      0.28  \n1      0.27  \n2      0.28  ",
-            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Age 60+</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n      <th>ER Visit</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>0.29</td>\n      <td>0.41</td>\n      <td>0.25</td>\n      <td>0.51</td>\n      <td>0.28</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>0.28</td>\n      <td>0.40</td>\n      <td>0.24</td>\n      <td>0.50</td>\n      <td>0.27</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>0.29</td>\n      <td>0.40</td>\n      <td>0.24</td>\n      <td>0.49</td>\n      <td>0.28</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
-          },
-          "metadata": {}
-        }
-      ],
-      "execution_count": 28,
-      "metadata": {
-        "jupyter": {
-          "source_hidden": false,
-          "outputs_hidden": false
-        },
-        "nteract": {
-          "transient": {
-            "deleting": false
-          }
-        },
-        "gather": {
-          "logged": 1701965482482
+          "logged": 1702404170671
         }
       }
     },
@@ -307,7 +313,7 @@
       "cell_type": "code",
       "source": [
         "data_predictions_hospital_id = pd.concat(\n",
-        "    [data_no_member_id[\"Hospital ID\"], predictions_pd], axis=1\n",
+        "    [data[\"Hospital ID\"], predictions_pd], axis=1\n",
         ")\n",
         "\n",
         "data_predictions_hospital_group = (\n",
@@ -315,7 +321,7 @@
         ")\n",
         "\n",
         "noise = np.random.uniform(\n",
-        "    -0.02, 0.02, data_predictions_hospital_group[\"Predictions\"].shape\n",
+        "    -200, 200, data_predictions_hospital_group[\"Predictions\"].shape\n",
         ")\n",
         "data_predictions_hospital_group[\"Predictions\"] = (\n",
         "    data_predictions_hospital_group[\"Predictions\"] + noise\n",
@@ -326,15 +332,15 @@
       "outputs": [
         {
           "output_type": "execute_result",
-          "execution_count": 36,
+          "execution_count": 16,
           "data": {
-            "text/plain": "   Hospital ID  Predictions\n0            1         0.06\n1            2         0.04\n2            3         0.04",
-            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Predictions</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>0.06</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>0.04</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>0.04</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+            "text/plain": "   Hospital ID  Predictions\n0            1      5727.52\n1            2      5630.62\n2            3      5767.65",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Predictions</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>5727.52</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>5630.62</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>5767.65</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
           },
           "metadata": {}
         }
       ],
-      "execution_count": 36,
+      "execution_count": 16,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -346,7 +352,7 @@
           }
         },
         "gather": {
-          "logged": 1701967247749
+          "logged": 1702404245114
         }
       }
     }

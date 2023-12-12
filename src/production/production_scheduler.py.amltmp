@@ -7,6 +7,7 @@ import numpy as np
 import joblib
 from skimpy import clean_columns
 
+
 # Set the path and read the data for the initial part of the app
 path_data = here("./data")
 os.chdir(path_data)
@@ -64,9 +65,8 @@ st.plotly_chart(fig)
 # New Section for Hospital Averages and Predictions
 
 # Load additional data and the model
-data_er_visits = pd.read_csv("data_er_visits.csv").rename(columns={"Unnamed: 0": "Member ID"})
-data_no_member_id = data_er_visits.drop(columns=["Member ID"])
-data_predict = data_no_member_id.drop(columns=["Hospital ID", "ER Visit"])
+data_pmpm = pd.read_csv("data_pmpm.csv")
+data_predict = data_pmpm.drop(columns=["Hospital ID", "ER Visit"])
 model = joblib.load("model_drivers.joblib")
 
 # Function to adjust binary percentages
@@ -117,40 +117,46 @@ def adjust_binary_percentages(df, **column_percentages):
 
 # Preprocess and adjust data with user-selected values
 data_predict_adjust = clean_columns(data_predict.copy())
+
 data_predict_adjust = adjust_binary_percentages(
     df=data_predict_adjust,
-    age_60=age_60_percentage,
-    high_cholesterol=high_cholesterol_percentage,
-    diabetes=diabetes_percentage,
-    preventative_services=preventative_services_percentage
+    high_blood_pressure=0.5,
+    high_cholesterol=0.3,
+    diabetes=0.4,
+    preventative_services=0.5,
 )
-data_predict_adjust.rename(columns={
-    'age_60': 'Age 60+',
-    'high_cholesterol': 'High Cholesterol',
-    'diabetes': 'Diabetes',
-    'preventative_services': 'Preventative Services'
-}, inplace=True)
+data_predict_adjust.rename(
+    columns={
+        "high_blood_pressure": "High Blood Pressure",
+        "high_cholesterol": "High Cholesterol",
+        "diabetes": "Diabetes",
+        "preventative_services": "Preventative Services",
+    },
+    inplace=True,
+)
+
+data_predict_adjust
 
 # Make predictions
 predictions = model.predict(data_predict_adjust)
-predictions_pd = pd.DataFrame(predictions).rename(columns={0: '% predicted ER visits'})
+predictions_pd = pd.DataFrame(predictions).rename(columns={0: '% predicted PMPM'})
 
 # Combine predictions with Hospital ID
 data_predictions_hospital_id = pd.concat(
-    [data_no_member_id["Hospital ID"], predictions_pd], axis=1
+    [data["Hospital ID"], predictions_pd], axis=1
 )
 
 # Calculate and adjust hospital averages
 data_predictions_hospital_group = (
     data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(2)
 )
-noise = np.random.uniform(-0.02, 0.02, data_predictions_hospital_group["% predicted ER visits"].shape)
-data_predictions_hospital_group["% predicted ER visits"] = (
-    data_predictions_hospital_group["% predicted ER visits"] + noise
+noise = np.random.uniform(-100, 100, data_predictions_hospital_group["% predicted PMPM"].shape)
+data_predictions_hospital_group["% predicted PMPM"] = (
+    data_predictions_hospital_group["% predicted PMPM"] + noise
 ).round(2)
 
 # Display Hospital Averages in Streamlit
-st.markdown("### Hospital ER visit predictions based on changes in features by selected hospital")
+st.markdown("### PMPM predictions based on changes in features by selected hospital")
 
 st.markdown("""
 Use the sliders on the left side to change the percentage of each feature present in the member population.
