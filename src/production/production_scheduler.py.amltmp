@@ -25,7 +25,7 @@ hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data["Hospital 
 
 # Sidebar options for adjusting percentages
 st.sidebar.markdown("### Adjust Binary Percentages")
-high_blood_pressure = st.sidebar.slider("High Blood Pressure", min_value=0.0, max_value=1.0, value=0.1)
+high_blood_pressure = st.sidebar.slider("High Blood Pressure Percentage", min_value=0.0, max_value=1.0, value=0.1)
 high_cholesterol_percentage = st.sidebar.slider("High Cholesterol Percentage", min_value=0.0, max_value=1.0, value=0.1)
 diabetes_percentage = st.sidebar.slider("Diabetes Percentage", min_value=0.0, max_value=1.0, value=0.1)
 preventative_services_percentage = st.sidebar.slider("Preventative Services Percentage", min_value=0.0, max_value=1.0, value=0.7)
@@ -36,8 +36,13 @@ df["AbsImpact"] = df["Impact"].abs()
 df = df.sort_values(by="AbsImpact", ascending=False)
 df = df.iloc[::-1]
 df = df.drop("AbsImpact", axis=1)
-df["ImpactText"] = df["Impact"].apply(lambda x: f"{x:.0%}")
+
+# Formatting impact as dollar amount rounded to the nearest dollar
+df["ImpactText"] = df["Impact"].apply(lambda x: f"${x:.0f}")
+
+# Assigning color based on the impact
 df["Color"] = df["Impact"].apply(lambda x: "blue" if x > 0 else "red")
+
 
 # Create horizontal bar chart using Plotly
 fig = px.bar(
@@ -134,8 +139,6 @@ data_predict_adjust.rename(
     },
     inplace=True,
 )
-
-data_predict_adjust
 
 # Make predictions
 predictions = model.predict(data_predict_adjust)
