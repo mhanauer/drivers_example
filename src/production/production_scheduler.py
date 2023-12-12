@@ -17,7 +17,7 @@ data = pd.read_csv("data_shap_hospital.csv")[["Hospital ID", "Driver", "Impact"]
 st.title("Hospital Drivers Analysis")
 
 st.markdown("""
-This demo uses synthetic data based on a model that predicts emergency room (ER) visits within the last 30 days. The results displayed below represent the average impact of various factors (referred to as 'drivers') on the probability of ER visits within the population. For instance, if the 'Age 60+' driver shows a percentage of 17%, this indicates that, on average, individuals aged 60 and above are 17% more likely to have an ER visit. Conversely, a negative percentage implies a lower probability of an ER visit.
+This demo uses synthetic data based on a model that predicts emergency room (ER) visits within the last 30 days. The results displayed below represent the average impact of various factors (referred to as 'drivers') on the per member per month costs within the population. For instance, if the 'Diabetes' driver shows a percentage of 17%, this indicates that, on average, individuals with Diabetes and are 17% more likely to have an . Conversely, a negative percentage implies a lower probability of an ER visit.
 """)
 
 # Sidebar for hospital selection
@@ -25,7 +25,7 @@ hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data["Hospital 
 
 # Sidebar options for adjusting percentages
 st.sidebar.markdown("### Adjust Binary Percentages")
-age_60_percentage = st.sidebar.slider("Age 60+ Percentage", min_value=0.0, max_value=1.0, value=0.1)
+high_blood_pressure = st.sidebar.slider("High Blood Pressure", min_value=0.0, max_value=1.0, value=0.1)
 high_cholesterol_percentage = st.sidebar.slider("High Cholesterol Percentage", min_value=0.0, max_value=1.0, value=0.1)
 diabetes_percentage = st.sidebar.slider("Diabetes Percentage", min_value=0.0, max_value=1.0, value=0.1)
 preventative_services_percentage = st.sidebar.slider("Preventative Services Percentage", min_value=0.0, max_value=1.0, value=0.7)
@@ -66,7 +66,7 @@ st.plotly_chart(fig)
 
 # Load additional data and the model
 data_pmpm = pd.read_csv("data_pmpm.csv")
-data_predict = data_pmpm.drop(columns=["Hospital ID", "ER Visit"])
+data_predict = data_pmpm.drop(columns=["Hospital ID", "Per Member Per Month Cost"])
 model = joblib.load("model_drivers.joblib")
 
 # Function to adjust binary percentages
