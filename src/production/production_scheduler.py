@@ -142,3 +142,6 @@ def main():
             data_predictions_hospital_group = (
                 data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(2)
             )
+
+if __name__ == "__main__":
+    main()
