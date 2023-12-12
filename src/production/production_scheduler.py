@@ -25,10 +25,10 @@ hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data["Hospital 
 
 # Sidebar options for adjusting percentages
 st.sidebar.markdown("### Adjust Binary Percentages")
-high_blood_pressure = st.sidebar.slider("Preventative Services Percentage", min_value=0.0, max_value=1.0, value=0.1)
+high_blood_pressure = st.sidebar.slider("High Blood Pressure Percentage", min_value=0.0, max_value=1.0, value=0.1)
 high_cholesterol_percentage = st.sidebar.slider("High Cholesterol Percentage", min_value=0.0, max_value=1.0, value=0.1)
 diabetes_percentage = st.sidebar.slider("Diabetes Percentage", min_value=0.0, max_value=1.0, value=0.1)
-preventative_services_percentage = st.sidebar.slider("High Blood Pressure Percentage", min_value=0.0, max_value=1.0, value=0.7)
+preventative_services_percentage = st.sidebar.slider("Preventative Services Percentage", min_value=0.0, max_value=1.0, value=0.7)
 
 # Filter data based on selected hospital
 df = data[data["Hospital ID"] == hospital_id]

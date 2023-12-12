@@ -6,7 +6,7 @@
         "%load_ext lab_black"
       ],
       "outputs": [],
-      "execution_count": 1,
+      "execution_count": 20,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -31,10 +31,10 @@
         "os.chdir(path_data)"
       ],
       "outputs": [],
-      "execution_count": 17,
+      "execution_count": 21,
       "metadata": {
         "gather": {
-          "logged": 1702406639756
+          "logged": 1702408515333
         }
       }
     },
@@ -69,17 +69,17 @@
         "# Simulate the costs with adjusted correlations\n",
         "for i in range(n_samples):\n",
         "    base_cost = np.random.normal(mean_cost, std_dev_cost)\n",
-        "    \n",
+        "\n",
         "    # Adjust cost based on conditions\n",
         "    if high_blood_pressure[i] == 1:\n",
-        "        base_cost += 2500\n",
+        "        base_cost += 2700\n",
         "    if high_cholesterol[i] == 1:\n",
-        "        base_cost += 1900\n",
+        "        base_cost += 2300\n",
         "    if diabetes[i] == 1:\n",
         "        base_cost += 2200\n",
         "    if preventative_services[i] == 1:\n",
-        "        base_cost -= 2000\n",
-        "    \n",
+        "        base_cost -= 2200\n",
+        "\n",
         "    # Consider interaction effects\n",
         "    if high_blood_pressure[i] == 1 and diabetes[i] == 1:\n",
         "        base_cost += 500  # Additional cost for comorbidity\n",
@@ -99,10 +99,10 @@
         "    }\n",
         ")\n",
         "\n",
-        "data.to_csv(\"data_pmpm.csv\", index=False)\n"
+        "data.to_csv(\"data_pmpm.csv\", index=False)"
       ],
       "outputs": [],
-      "execution_count": 18,
+      "execution_count": 22,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -114,7 +114,7 @@
           }
         },
         "gather": {
-          "logged": 1702406641773
+          "logged": 1702408539785
         }
       }
     },
@@ -126,15 +126,15 @@
       "outputs": [
         {
           "output_type": "execute_result",
-          "execution_count": 19,
+          "execution_count": 23,
           "data": {
-            "text/plain": "                           Hospital ID  High Blood Pressure  High Cholesterol  \\\nHospital ID                   1.000000             0.002485         -0.004357   \nHigh Blood Pressure           0.002485             1.000000          0.002841   \nHigh Cholesterol             -0.004357             0.002841          1.000000   \nDiabetes                     -0.005583            -0.014090         -0.022389   \nPreventative Services        -0.010173             0.000662         -0.004277   \nPer Member Per Month Cost    -0.009250             0.404646          0.328356   \n\n                           Diabetes  Preventative Services  \\\nHospital ID               -0.005583              -0.010173   \nHigh Blood Pressure       -0.014090               0.000662   \nHigh Cholesterol          -0.022389              -0.004277   \nDiabetes                   1.000000               0.003024   \nPreventative Services      0.003024               1.000000   \nPer Member Per Month Cost  0.334350              -0.342200   \n\n                           Per Member Per Month Cost  \nHospital ID                                -0.009250  \nHigh Blood Pressure                         0.404646  \nHigh Cholesterol                            0.328356  \nDiabetes                                    0.334350  \nPreventative Services                      -0.342200  \nPer Member Per Month Cost                   1.000000  ",
-            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>High Blood Pressure</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n      <th>Per Member Per Month Cost</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>Hospital ID</th>\n      <td>1.000000</td>\n      <td>0.002485</td>\n      <td>-0.004357</td>\n      <td>-0.005583</td>\n      <td>-0.010173</td>\n      <td>-0.009250</td>\n    </tr>\n    <tr>\n      <th>High Blood Pressure</th>\n      <td>0.002485</td>\n      <td>1.000000</td>\n      <td>0.002841</td>\n      <td>-0.014090</td>\n      <td>0.000662</td>\n      <td>0.404646</td>\n    </tr>\n    <tr>\n      <th>High Cholesterol</th>\n      <td>-0.004357</td>\n      <td>0.002841</td>\n      <td>1.000000</td>\n      <td>-0.022389</td>\n      <td>-0.004277</td>\n      <td>0.328356</td>\n    </tr>\n    <tr>\n      <th>Diabetes</th>\n      <td>-0.005583</td>\n      <td>-0.014090</td>\n      <td>-0.022389</td>\n      <td>1.000000</td>\n      <td>0.003024</td>\n      <td>0.334350</td>\n    </tr>\n    <tr>\n      <th>Preventative Services</th>\n      <td>-0.010173</td>\n      <td>0.000662</td>\n      <td>-0.004277</td>\n      <td>0.003024</td>\n      <td>1.000000</td>\n      <td>-0.342200</td>\n    </tr>\n    <tr>\n      <th>Per Member Per Month Cost</th>\n      <td>-0.009250</td>\n      <td>0.404646</td>\n      <td>0.328356</td>\n      <td>0.334350</td>\n      <td>-0.342200</td>\n      <td>1.000000</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+            "text/plain": "                           Hospital ID  High Blood Pressure  High Cholesterol  \\\nHospital ID                   1.000000             0.002485         -0.004357   \nHigh Blood Pressure           0.002485             1.000000          0.002841   \nHigh Cholesterol             -0.004357             0.002841          1.000000   \nDiabetes                     -0.005583            -0.014090         -0.022389   \nPreventative Services        -0.010173             0.000662         -0.004277   \nPer Member Per Month Cost    -0.008763             0.413886          0.378183   \n\n                           Diabetes  Preventative Services  \\\nHospital ID               -0.005583              -0.010173   \nHigh Blood Pressure       -0.014090               0.000662   \nHigh Cholesterol          -0.022389              -0.004277   \nDiabetes                   1.000000               0.003024   \nPreventative Services      0.003024               1.000000   \nPer Member Per Month Cost  0.313861              -0.359326   \n\n                           Per Member Per Month Cost  \nHospital ID                                -0.008763  \nHigh Blood Pressure                         0.413886  \nHigh Cholesterol                            0.378183  \nDiabetes                                    0.313861  \nPreventative Services                      -0.359326  \nPer Member Per Month Cost                   1.000000  ",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>High Blood Pressure</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n      <th>Per Member Per Month Cost</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>Hospital ID</th>\n      <td>1.000000</td>\n      <td>0.002485</td>\n      <td>-0.004357</td>\n      <td>-0.005583</td>\n      <td>-0.010173</td>\n      <td>-0.008763</td>\n    </tr>\n    <tr>\n      <th>High Blood Pressure</th>\n      <td>0.002485</td>\n      <td>1.000000</td>\n      <td>0.002841</td>\n      <td>-0.014090</td>\n      <td>0.000662</td>\n      <td>0.413886</td>\n    </tr>\n    <tr>\n      <th>High Cholesterol</th>\n      <td>-0.004357</td>\n      <td>0.002841</td>\n      <td>1.000000</td>\n      <td>-0.022389</td>\n      <td>-0.004277</td>\n      <td>0.378183</td>\n    </tr>\n    <tr>\n      <th>Diabetes</th>\n      <td>-0.005583</td>\n      <td>-0.014090</td>\n      <td>-0.022389</td>\n      <td>1.000000</td>\n      <td>0.003024</td>\n      <td>0.313861</td>\n    </tr>\n    <tr>\n      <th>Preventative Services</th>\n      <td>-0.010173</td>\n      <td>0.000662</td>\n      <td>-0.004277</td>\n      <td>0.003024</td>\n      <td>1.000000</td>\n      <td>-0.359326</td>\n    </tr>\n    <tr>\n      <th>Per Member Per Month Cost</th>\n      <td>-0.008763</td>\n      <td>0.413886</td>\n      <td>0.378183</td>\n      <td>0.313861</td>\n      <td>-0.359326</td>\n      <td>1.000000</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
           },
           "metadata": {}
         }
       ],
-      "execution_count": 19,
+      "execution_count": 23,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -146,7 +146,7 @@
           }
         },
         "gather": {
-          "logged": 1702406644898
+          "logged": 1702408542337
         }
       }
     }
