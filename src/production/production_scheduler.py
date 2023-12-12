@@ -79,6 +79,10 @@ import pandas as pd
 import numpy as np
 
 
+import pandas as pd
+import numpy as np
+
+
 def adjust_binary_percentages(df, **column_percentages):
     """
     Adjusts the percentage of 1's in each specified column of a binary DataFrame.
@@ -120,14 +124,12 @@ def adjust_binary_percentages(df, **column_percentages):
 
     return df
 
-# Preprocess and adjust data with user-selected values
 data_predict_adjust = clean_columns(data_predict.copy())
-
 data_predict_adjust = adjust_binary_percentages(
     df=data_predict_adjust,
     high_blood_pressure=0.5,
-    high_cholesterol=0.3,
-    diabetes=0.4,
+    high_cholesterol=0.7,
+    diabetes=0.5,
     preventative_services=0.5,
 )
 data_predict_adjust.rename(
@@ -141,22 +143,23 @@ data_predict_adjust.rename(
 )
 
 # Make predictions
+# Make predictions (opxtional, to evaluate model)
 predictions = model.predict(data_predict_adjust)
-predictions_pd = pd.DataFrame(predictions).rename(columns={0: 'Predicted PMPM'})
+predictions_pd = pd.DataFrame(predictions).rename(columns={0: "Predictions"})
 
-# Combine predictions with Hospital ID
-data_predictions_hospital_id = pd.concat(
-    [data["Hospital ID"], predictions_pd], axis=1
-)
+data_predictions_hospital_id = pd.concat([data["Hospital ID"], predictions_pd], axis=1)
 
-# Calculate and adjust hospital averages
 data_predictions_hospital_group = (
     data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(2)
 )
-noise = np.random.uniform(-100, 100, data_predictions_hospital_group["Predicted PMPM"].shape)
-data_predictions_hospital_group["Predicted PMPM"] = (
-    data_predictions_hospital_group["Predicted PMPM"] + noise
+
+noise = np.random.uniform(
+    -100, 100, data_predictions_hospital_group["Predictions"].shape
+)
+data_predictions_hospital_group["Predictions"] = (
+    data_predictions_hospital_group["Predictions"]   + noise
 ).round(2)
+
 
 # Display Hospital Averages in Streamlit
 st.markdown("### PMPM predictions based on changes in features by selected hospital")
