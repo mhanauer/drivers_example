@@ -25,10 +25,10 @@ hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data["Hospital 
 
 # Sidebar options for adjusting percentages
 st.sidebar.markdown("### Adjust Binary Percentages")
-high_blood_pressure = st.sidebar.slider("High Blood Pressure Percentage", min_value=0.0, max_value=1.0, value=0.1)
+high_blood_pressure = st.sidebar.slider("Preventative Services Percentage", min_value=0.0, max_value=1.0, value=0.1)
 high_cholesterol_percentage = st.sidebar.slider("High Cholesterol Percentage", min_value=0.0, max_value=1.0, value=0.1)
 diabetes_percentage = st.sidebar.slider("Diabetes Percentage", min_value=0.0, max_value=1.0, value=0.1)
-preventative_services_percentage = st.sidebar.slider("Preventative Services Percentage", min_value=0.0, max_value=1.0, value=0.7)
+preventative_services_percentage = st.sidebar.slider("High Blood Pressure Percentage", min_value=0.0, max_value=1.0, value=0.7)
 
 # Filter data based on selected hospital
 df = data[data["Hospital ID"] == hospital_id]
@@ -142,7 +142,7 @@ data_predict_adjust.rename(
 
 # Make predictions
 predictions = model.predict(data_predict_adjust)
-predictions_pd = pd.DataFrame(predictions).rename(columns={0: '% predicted PMPM'})
+predictions_pd = pd.DataFrame(predictions).rename(columns={0: 'Predicted PMPM'})
 
 # Combine predictions with Hospital ID
 data_predictions_hospital_id = pd.concat(
@@ -153,9 +153,9 @@ data_predictions_hospital_id = pd.concat(
 data_predictions_hospital_group = (
     data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(2)
 )
-noise = np.random.uniform(-100, 100, data_predictions_hospital_group["% predicted PMPM"].shape)
-data_predictions_hospital_group["% predicted PMPM"] = (
-    data_predictions_hospital_group["% predicted PMPM"] + noise
+noise = np.random.uniform(-100, 100, data_predictions_hospital_group["Predicted PMPM"].shape)
+data_predictions_hospital_group["Predicted PMPM"] = (
+    data_predictions_hospital_group["Predicted PMPM"] + noise
 ).round(2)
 
 # Display Hospital Averages in Streamlit
