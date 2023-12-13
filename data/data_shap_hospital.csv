@@ -1,13 +1,13 @@
 ,Hospital ID,Driver,Impact
-0,1,Age 60+,0.35
-1,1,High Cholesterol,0.24
-2,1,Diabetes,0.08
-3,1,Preventative Services,-0.15
-4,3,Age 60+,0.28
-5,3,High Cholesterol,0.22
-6,3,Diabetes,0.15
-7,3,Preventative Services,-0.18
-8,2,Age 60+,0.38
-9,2,High Cholesterol,0.23
-10,2,Diabetes,0.12
-11,2,Preventative Services,-0.16
+0,1,High Blood Pressure,1839.66
+1,1,High Cholesterol,1015.81
+2,1,Diabetes,1537.9
+3,1,Preventative Services,-981.21
+4,3,High Blood Pressure,1942.02
+5,3,High Cholesterol,1019.22
+6,3,Diabetes,1358.88
+7,3,Preventative Services,-1210.58
+8,2,High Blood Pressure,1784.81
+9,2,High Cholesterol,1133.74
+10,2,Diabetes,1372.54
+11,2,Preventative Services,-1088.77
