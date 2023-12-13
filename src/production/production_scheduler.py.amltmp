@@ -66,31 +66,24 @@ def main():
     """
     Main function for the Streamlit app.
     """
-    # Streamlit title for the initial part of the app
     st.title("PMPM Drivers Analysis")
 
-    # Description markdown
     st.markdown("""
     This demo uses synthetic data based on a model that predicts per member per month (PMPM) costs. The results displayed below represent the average impact of various factors (referred to as 'drivers') on PMPM costs. We also include a what if analysis allowing the users to evaluate changes in their attributed population on PMPM. 
     """)
 
-    # Load data and model
     data_pmpm, data_shap, model = load_data_model()
 
-    # Sidebar for hospital selection
     hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data_shap["Hospital ID"].unique())
 
-    # Filter data based on selected hospital
     df = data_shap[data_shap["Hospital ID"] == hospital_id]
     df["AbsImpact"] = df["Impact"].abs()
     df = df.sort_values(by="AbsImpact", ascending=False).iloc[::-1]
     df = df.drop("AbsImpact", axis=1)
 
-    # Round Impact to nearest dollar and format as text
     df["ImpactText"] = df["Impact"].apply(lambda x: f"${round(x):,}")
     df["Color"] = df["Impact"].apply(lambda x: "blue" if x > 0 else "red")
 
-    # Create horizontal bar chart using Plotly
     fig = px.bar(
         df,
         x="Impact",
@@ -109,19 +102,17 @@ def main():
     fig.update_traces(texttemplate="%{text}", textposition="inside")
     st.plotly_chart(fig)
 
-    # Streamlit title for the PMPM prediction part
     st.title("PMPM Cost Prediction")
 
-    # Sliders for feature adjustment in the sidebar
     bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', 0.1, 1.0, 0.1, step=0.1)
     chol_percentage = st.sidebar.slider('High Cholesterol Percentage', 0.1, 1.0, 0.1, step=0.1)
     diabetes_percentage = st.sidebar.slider('Diabetes Percentage', 0.1, 1.0, 0.1, step=0.1)
     preventive_percentage = st.sidebar.slider('Preventative Services Percentage', 0.1, 1.0, 0.1, step=0.1)
 
-    # Predictions generation button
+    data_predictions_hospital_group = pd.DataFrame()  # Initialize the variable
+
     if st.sidebar.button("Generate Predictions"):
         with st.spinner('Processing...'):
-            # Data preparation for prediction
             data_predict = data_pmpm.drop(columns=["Hospital ID", "Per Member Per Month Cost"])
             data_predict_adjust = clean_columns(data_predict.copy())
             data_predict_adjust = adjust_binary_percentages(
@@ -141,62 +132,55 @@ def main():
                 inplace=True,
             )
             predictions = model.predict(data_predict_adjust)
-            predictions_rounded = np.round(predictions)  # Round to nearest dollar
+            predictions_rounded = np.round(predictions)
             predictions_pd = pd.DataFrame(predictions_rounded).rename(columns={0: "Predictions"})
             data_predictions_hospital_id = pd.concat([data_pmpm["Hospital ID"], predictions_pd], axis=1)
             data_predictions_hospital_group = (
-                data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(0)  # Round to nearest dollar
+                data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(0)
             )
 
-    # Assuming data_pmpm and data_predictions_hospital_group are already defined
-    # Merge the datasets on 'Hospital ID'
-    
-    data_actual_costs = (
-        data_pmpm[["Hospital ID", "Per Member Per Month Cost"]]
-            .groupby("Hospital ID")
-            .mean()
-            .reset_index()
-        ).round(0)
-        
-    merged_data = data_actual_costs.merge(
-        data_predictions_hospital_group,
-        on="Hospital ID",
-    )
+    if not data_predictions_hospital_group.empty:
+        data_actual_costs = (
+            data_pmpm[["Hospital ID", "Per Member Per Month Cost"]]
+                .groupby("Hospital ID")
+                .mean()
+                .reset_index()
+            ).round(0)
+            
+        merged_data = data_actual_costs.merge(
+            data_predictions_hospital_group,
+            on="Hospital ID",
+        )
 
-    # Calculate the difference
-    merged_data["Difference"] = (
-        merged_data["Predictions"] - merged_data["Per Member Per Month Cost"]
-    )
+        merged_data["Difference"] = (
+            merged_data["Predictions"] - merged_data["Per Member Per Month Cost"]
+        )
 
-    # Calculate the percentage change
-    merged_data["Percentage Change"] = (
-        merged_data["Difference"] / merged_data["Predictions"]
-    ) * 100
+        merged_data["Percentage Change"] = (
+            merged_data["Difference"] / merged_data["Predictions"]
+        ) * 100
 
-    # Formatting the Difference and Percentage Change
-    merged_data["Difference"] = merged_data["Difference"].map("${:,.0f}".format)
-    merged_data["Predictions"] = merged_data["Predictions"].map("${:,.0f}".format)
-    merged_data["Per Member Per Month Cost"] = merged_data["Per Member Per Month Cost"].map(
-        "${:,.0f}".format
-    )
+        merged_data["Difference"] = merged_data["Difference"].map("${:,.0f}".format)
+        merged_data["Predictions"] = merged_data["Predictions"].map("${:,.0f}".format)
+        merged_data["Per Member Per Month Cost"] = merged_data["Per Member Per Month Cost"].map(
+            "${:,.0f}".format
+        )
 
-    merged_data["Percentage Change"] = merged_data["Percentage Change"].map(
-        "{:.2f}%".format
-    )
+        merged_data["Percentage Change"] = merged_data["Percentage Change"].map(
+            "{:.2f}%".format
+        )
 
-    # Concatenating the relevant columns
-    data_predicted_actual = pd.concat(
-        [
-            merged_data[["Hospital ID"]],
-            merged_data[["Predictions"]],
-            merged_data[["Per Member Per Month Cost", "Difference", "Percentage Change"]],
-        ],
-        axis=1,
-    )
+        data_predicted_actual = pd.concat(
+            [
+                merged_data[["Hospital ID"]],
+                merged_data[["Predictions"]],
+                merged_data[["Per Member Per Month Cost", "Difference", "Percentage Change"]],
+            ],
+            axis=1,
+        )
 
-    # Display the final DataFrame
-    st.write("Comparison of Actual and Predicted PMPM per Hospital ID")
-    st.dataframe(data_predicted_actual)
+        st.write("Comparison of Actual and Predicted PMPM per Hospital ID")
+        st.dataframe(data_predicted_actual)
 
 
 if __name__ == "__main__":
