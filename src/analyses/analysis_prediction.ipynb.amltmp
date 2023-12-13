@@ -5,14 +5,8 @@
       "source": [
         "%load_ext lab_black"
       ],
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": "The lab_black extension is already loaded. To reload it, use:\n  %reload_ext lab_black\n"
-        }
-      ],
-      "execution_count": 15,
+      "outputs": [],
+      "execution_count": 1,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -47,8 +41,14 @@
         "# Load the model\n",
         "model = joblib.load(\"model_drivers.joblib\")"
       ],
-      "outputs": [],
-      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": "/anaconda/envs/azureml_py38/lib/python3.8/site-packages/xgboost/compat.py:31: FutureWarning: pandas.Int64Index is deprecated and will be removed from pandas in a future version. Use pandas.Index with the appropriate dtype instead.\n  from pandas import MultiIndex, Int64Index\n"
+        }
+      ],
+      "execution_count": 2,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -60,7 +60,7 @@
           }
         },
         "gather": {
-          "logged": 1702414850531
+          "logged": 1702471085323
         }
       }
     },
@@ -91,7 +91,7 @@
       "outputs": [
         {
           "output_type": "execute_result",
-          "execution_count": 17,
+          "execution_count": 4,
           "data": {
             "text/plain": "   Hospital ID  High Blood Pressure  High Cholesterol  Diabetes  \\\n0            1                  0.3              0.40      0.25   \n1            2                  0.3              0.40      0.25   \n2            3                  0.3              0.41      0.25   \n\n   Preventative Services  Per Member Per Month Cost  \n0                    0.5                    5178.47  \n1                    0.5                    5163.05  \n2                    0.5                    5179.44  ",
             "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>High Blood Pressure</th>\n      <th>High Cholesterol</th>\n      <th>Diabetes</th>\n      <th>Preventative Services</th>\n      <th>Per Member Per Month Cost</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>0.3</td>\n      <td>0.40</td>\n      <td>0.25</td>\n      <td>0.5</td>\n      <td>5178.47</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>0.3</td>\n      <td>0.40</td>\n      <td>0.25</td>\n      <td>0.5</td>\n      <td>5163.05</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>0.3</td>\n      <td>0.41</td>\n      <td>0.25</td>\n      <td>0.5</td>\n      <td>5179.44</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
@@ -99,7 +99,7 @@
           "metadata": {}
         }
       ],
-      "execution_count": 17,
+      "execution_count": 4,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -111,7 +111,7 @@
           }
         },
         "gather": {
-          "logged": 1702414852217
+          "logged": 1702471085489
         }
       }
     },
@@ -177,7 +177,7 @@
         "    return df"
       ],
       "outputs": [],
-      "execution_count": 18,
+      "execution_count": 5,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -189,7 +189,7 @@
           }
         },
         "gather": {
-          "logged": 1702414854007
+          "logged": 1702471085633
         }
       }
     },
@@ -215,7 +215,7 @@
         ")"
       ],
       "outputs": [],
-      "execution_count": 70,
+      "execution_count": 6,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -227,7 +227,7 @@
           }
         },
         "gather": {
-          "logged": 1702415910545
+          "logged": 1702471085720
         }
       }
     },
@@ -245,7 +245,7 @@
           "text": "pandas.Int64Index is deprecated and will be removed from pandas in a future version. Use pandas.Index with the appropriate dtype instead.\n"
         }
       ],
-      "execution_count": 71,
+      "execution_count": 7,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -257,7 +257,7 @@
           }
         },
         "gather": {
-          "logged": 1702415912438
+          "logged": 1702471085816
         }
       }
     },
@@ -282,15 +282,15 @@
       "outputs": [
         {
           "output_type": "execute_result",
-          "execution_count": 72,
+          "execution_count": 8,
           "data": {
-            "text/plain": "   Hospital ID  Predictions\n0            1  4131.040039\n1            2  4132.459961\n2            3  4137.160156",
-            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Predictions</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>4131.040039</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>4132.459961</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>4137.160156</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+            "text/plain": "   Hospital ID  Predictions\n0            1  4121.000000\n1            2  4136.209961\n2            3  4143.220215",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Predictions</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>4121.000000</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>4136.209961</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>4143.220215</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
           },
           "metadata": {}
         }
       ],
-      "execution_count": 72,
+      "execution_count": 8,
       "metadata": {
         "jupyter": {
           "source_hidden": false,
@@ -302,7 +302,166 @@
           }
         },
         "gather": {
-          "logged": 1702415913933
+          "logged": 1702471085926
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "data_actual_costs = (\n",
+        "    data[[\"Hospital ID\", \"Per Member Per Month Cost\"]]\n",
+        "    .groupby(\"Hospital ID\")\n",
+        "    .mean()\n",
+        "    .reset_index()\n",
+        ").round(0)\n",
+        "data_actual_costs"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 14,
+          "data": {
+            "text/plain": "   Hospital ID  Per Member Per Month Cost\n0            1                     5178.0\n1            2                     5163.0\n2            3                     5179.0",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Per Member Per Month Cost</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>5178.0</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>5163.0</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>5179.0</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 14,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1702471209195
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "# Assuming data_actual_costs and data_predictions_hospital_group are already defined\n",
+        "\n",
+        "# Merge the datasets on 'Hospital ID'\n",
+        "merged_data = data_actual_costs.merge(\n",
+        "    data_predictions_hospital_group,\n",
+        "    on=\"Hospital ID\",\n",
+        ")\n",
+        "\n",
+        "# Calculate the difference\n",
+        "merged_data[\"Difference\"] = (\n",
+        "    merged_data[\"Predictions\"] - merged_data[\"Per Member Per Month Cost\"]\n",
+        ")\n",
+        "\n",
+        "# Calculate the percentage change\n",
+        "merged_data[\"Percentage Change\"] = (\n",
+        "    merged_data[\"Difference\"] / merged_data[\"Predictions\"]\n",
+        ") * 100\n",
+        "\n",
+        "# Formatting the Difference and Percentage Change\n",
+        "merged_data[\"Difference\"] = merged_data[\"Difference\"].map(\"${:,.0f}\".format)\n",
+        "merged_data[\"Predictions\"] = merged_data[\"Predictions\"].map(\"${:,.0f}\".format)\n",
+        "merged_data[\"Per Member Per Month Cost\"] = merged_data[\"Per Member Per Month Cost\"].map(\n",
+        "    \"${:,.0f}\".format\n",
+        ")\n",
+        "\n",
+        "\n",
+        "merged_data[\"Percentage Change\"] = merged_data[\"Percentage Change\"].map(\n",
+        "    \"{:.2f}%\".format\n",
+        ")\n",
+        "\n",
+        "# Concatenating the relevant columns\n",
+        "data_predicted_actual = pd.concat(\n",
+        "    [\n",
+        "        merged_data[[\"Hospital ID\"]],\n",
+        "        merged_data[[\"Predictions\"]],\n",
+        "        merged_data[[\"Per Member Per Month Cost\", \"Difference\", \"Percentage Change\"]],\n",
+        "    ],\n",
+        "    axis=1,\n",
+        ")\n",
+        "\n",
+        "# Display the final DataFrame\n",
+        "data_predicted_actual"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 35,
+          "data": {
+            "text/plain": "   Hospital ID Predictions Per Member Per Month Cost Difference  \\\n0            1      $4,121                    $5,178    $-1,057   \n1            2      $4,136                    $5,163    $-1,027   \n2            3      $4,143                    $5,179    $-1,036   \n\n  Percentage Change  \n0           -25.65%  \n1           -24.82%  \n2           -25.00%  ",
+            "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Hospital ID</th>\n      <th>Predictions</th>\n      <th>Per Member Per Month Cost</th>\n      <th>Difference</th>\n      <th>Percentage Change</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>1</td>\n      <td>$4,121</td>\n      <td>$5,178</td>\n      <td>$-1,057</td>\n      <td>-25.65%</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>2</td>\n      <td>$4,136</td>\n      <td>$5,163</td>\n      <td>$-1,027</td>\n      <td>-24.82%</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>3</td>\n      <td>$4,143</td>\n      <td>$5,179</td>\n      <td>$-1,036</td>\n      <td>-25.00%</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 35,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1702472229153
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "        # Calculate difference and percentage change\n",
+        "\n"
+      ],
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "KeyError",
+          "evalue": "'Per Member Per Month Cost_Actual'",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mKeyError\u001b[0m                                  Traceback (most recent call last)",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/pandas/core/indexes/base.py:3621\u001b[0m, in \u001b[0;36mIndex.get_loc\u001b[0;34m(self, key, method, tolerance)\u001b[0m\n\u001b[1;32m   3620\u001b[0m \u001b[38;5;28;01mtry\u001b[39;00m:\n\u001b[0;32m-> 3621\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43m_engine\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mget_loc\u001b[49m\u001b[43m(\u001b[49m\u001b[43mcasted_key\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m   3622\u001b[0m \u001b[38;5;28;01mexcept\u001b[39;00m \u001b[38;5;167;01mKeyError\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m err:\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/pandas/_libs/index.pyx:136\u001b[0m, in \u001b[0;36mpandas._libs.index.IndexEngine.get_loc\u001b[0;34m()\u001b[0m\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/pandas/_libs/index.pyx:163\u001b[0m, in \u001b[0;36mpandas._libs.index.IndexEngine.get_loc\u001b[0;34m()\u001b[0m\n",
+            "File \u001b[0;32mpandas/_libs/hashtable_class_helper.pxi:5198\u001b[0m, in \u001b[0;36mpandas._libs.hashtable.PyObjectHashTable.get_item\u001b[0;34m()\u001b[0m\n",
+            "File \u001b[0;32mpandas/_libs/hashtable_class_helper.pxi:5206\u001b[0m, in \u001b[0;36mpandas._libs.hashtable.PyObjectHashTable.get_item\u001b[0;34m()\u001b[0m\n",
+            "\u001b[0;31mKeyError\u001b[0m: 'Per Member Per Month Cost_Actual'",
+            "\nThe above exception was the direct cause of the following exception:\n",
+            "\u001b[0;31mKeyError\u001b[0m                                  Traceback (most recent call last)",
+            "Cell \u001b[0;32mIn[15], line 4\u001b[0m\n\u001b[1;32m      1\u001b[0m merged_data \u001b[38;5;241m=\u001b[39m data_actual_costs\u001b[38;5;241m.\u001b[39mmerge(data_predictions_hospital_group, on\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mHospital ID\u001b[39m\u001b[38;5;124m\"\u001b[39m, suffixes\u001b[38;5;241m=\u001b[39m(\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m_Actual\u001b[39m\u001b[38;5;124m'\u001b[39m, \u001b[38;5;124m'\u001b[39m\u001b[38;5;124m_Predicted\u001b[39m\u001b[38;5;124m'\u001b[39m))\n\u001b[1;32m      3\u001b[0m         \u001b[38;5;66;03m# Calculate difference and percentage change\u001b[39;00m\n\u001b[0;32m----> 4\u001b[0m merged_data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mDifference\u001b[39m\u001b[38;5;124m'\u001b[39m] \u001b[38;5;241m=\u001b[39m \u001b[43mmerged_data\u001b[49m\u001b[43m[\u001b[49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[38;5;124;43mPer Member Per Month Cost_Actual\u001b[39;49m\u001b[38;5;124;43m'\u001b[39;49m\u001b[43m]\u001b[49m \u001b[38;5;241m-\u001b[39m merged_data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mPredictions_Predicted\u001b[39m\u001b[38;5;124m'\u001b[39m]\n\u001b[1;32m      5\u001b[0m merged_data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mPercentage Change\u001b[39m\u001b[38;5;124m'\u001b[39m] \u001b[38;5;241m=\u001b[39m (merged_data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mDifference\u001b[39m\u001b[38;5;124m'\u001b[39m] \u001b[38;5;241m/\u001b[39m merged_data[\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mPer Member Per Month Cost_Actual\u001b[39m\u001b[38;5;124m'\u001b[39m]) \u001b[38;5;241m*\u001b[39m \u001b[38;5;241m100\u001b[39m\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/pandas/core/frame.py:3505\u001b[0m, in \u001b[0;36mDataFrame.__getitem__\u001b[0;34m(self, key)\u001b[0m\n\u001b[1;32m   3503\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mcolumns\u001b[38;5;241m.\u001b[39mnlevels \u001b[38;5;241m>\u001b[39m \u001b[38;5;241m1\u001b[39m:\n\u001b[1;32m   3504\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_getitem_multilevel(key)\n\u001b[0;32m-> 3505\u001b[0m indexer \u001b[38;5;241m=\u001b[39m \u001b[38;5;28;43mself\u001b[39;49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mcolumns\u001b[49m\u001b[38;5;241;43m.\u001b[39;49m\u001b[43mget_loc\u001b[49m\u001b[43m(\u001b[49m\u001b[43mkey\u001b[49m\u001b[43m)\u001b[49m\n\u001b[1;32m   3506\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m is_integer(indexer):\n\u001b[1;32m   3507\u001b[0m     indexer \u001b[38;5;241m=\u001b[39m [indexer]\n",
+            "File \u001b[0;32m/anaconda/envs/azureml_py38/lib/python3.8/site-packages/pandas/core/indexes/base.py:3623\u001b[0m, in \u001b[0;36mIndex.get_loc\u001b[0;34m(self, key, method, tolerance)\u001b[0m\n\u001b[1;32m   3621\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_engine\u001b[38;5;241m.\u001b[39mget_loc(casted_key)\n\u001b[1;32m   3622\u001b[0m \u001b[38;5;28;01mexcept\u001b[39;00m \u001b[38;5;167;01mKeyError\u001b[39;00m \u001b[38;5;28;01mas\u001b[39;00m err:\n\u001b[0;32m-> 3623\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mKeyError\u001b[39;00m(key) \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01merr\u001b[39;00m\n\u001b[1;32m   3624\u001b[0m \u001b[38;5;28;01mexcept\u001b[39;00m \u001b[38;5;167;01mTypeError\u001b[39;00m:\n\u001b[1;32m   3625\u001b[0m     \u001b[38;5;66;03m# If we have a listlike key, _check_indexing_error will raise\u001b[39;00m\n\u001b[1;32m   3626\u001b[0m     \u001b[38;5;66;03m#  InvalidIndexError. Otherwise we fall through and re-raise\u001b[39;00m\n\u001b[1;32m   3627\u001b[0m     \u001b[38;5;66;03m#  the TypeError.\u001b[39;00m\n\u001b[1;32m   3628\u001b[0m     \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39m_check_indexing_error(key)\n",
+            "\u001b[0;31mKeyError\u001b[0m: 'Per Member Per Month Cost_Actual'"
+          ]
+        }
+      ],
+      "execution_count": 15,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        },
+        "gather": {
+          "logged": 1702471236441
         }
       }
     }
