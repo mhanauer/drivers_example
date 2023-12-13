@@ -7,15 +7,22 @@ from pyprojroot import here
 import os
 from skimpy import clean_columns
 
+import pandas as pd
+import numpy as np
+
+
 def adjust_binary_percentages(df, **column_percentages):
     """
     Adjusts the percentage of 1's in each specified column of a binary DataFrame.
+
     Args:
     df (pd.DataFrame): DataFrame with binary values.
     column_percentages (dict): A dictionary where keys are column names and values are the new desired percentages of 1's.
+
     Returns:
     pd.DataFrame: Modified DataFrame.
     """
+
     for column, percentage in column_percentages.items():
         if column not in df.columns:
             raise ValueError(f"Column {column} not found in DataFrame")
@@ -65,12 +72,6 @@ def main():
 
     data_pmpm, data_shap, model = load_data_model()
 
-    # Setting default slider values to mean values of respective features
-    default_bp_percentage = data_pmpm["high_blood_pressure"].mean()
-    default_chol_percentage = data_pmpm["high_cholesterol"].mean()
-    default_diabetes_percentage = data_pmpm["diabetes"].mean()
-    default_preventive_percentage = data_pmpm["preventative_services"].mean()
-
     # Sidebar for hospital selection
     hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data_shap["Hospital ID"].unique())
 
@@ -105,16 +106,15 @@ def main():
     # Streamlit title for the PMPM prediction part
     st.title("PMPM Cost Prediction")
 
-    # Sliders for feature adjustment in the sidebar with default values set to mean
-    bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', 0.0, 1.0, default_bp_percentage, step=0.01)
-    chol_percentage = st.sidebar.slider('High Cholesterol Percentage', 0.0, 1.0, default_chol_percentage, step=0.01)
-    diabetes_percentage = st.sidebar.slider('Diabetes Percentage', 0.0, 1.0, default_diabetes_percentage, step=0.01)
-    preventive_percentage = st.sidebar.slider('Preventative Services Percentage', 0.0, 1.0, default_preventive_percentage, step=0.01)
+    # Sliders for feature adjustment in the sidebar
+    bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', 0.1, 1.0, 0.1, step=0.1)
+    chol_percentage = st.sidebar.slider('High Cholesterol Percentage', 0.1, 1.0, 0.1, step=0.1)
+    diabetes_percentage = st.sidebar.slider('Diabetes Percentage', 0.1, 1.0, 0.1, step=0.1)
+    preventive_percentage = st.sidebar.slider('Preventative Services Percentage', 0.1, 1.0, 0.1, step=0.1)
 
     if st.sidebar.button("Generate Predictions"):
         with st.spinner('Processing...'):
-            # Filter data for the selected hospital ID
-            data_predict = data_pmpm[data_pmpm["Hospital ID"] == hospital_id].drop(columns=["Per Member Per Month Cost"])
+            data_predict = data_pmpm.drop(columns=["Hospital ID", "Per Member Per Month Cost"])
             data_predict_adjust = clean_columns(data_predict.copy())
             data_predict_adjust = adjust_binary_percentages(
                 df=data_predict_adjust,
@@ -139,8 +139,17 @@ def main():
             data_predictions_hospital_group = (
                 data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(0)  # Round to nearest dollar
             )
-            st.write("Predictions per Hospital ID")
-            st.dataframe(data_predictions_hospital_group)
+
+            merged_data = data_pmpm.merge(data_predictions_hospital_group, on="Hospital ID", suffixes=('_Actual', '_Predicted'))
+
+        # Calculate difference and percentage change
+        merged_data['Difference'] = merged_data['Per Member Per Month Cost_Actual'] - merged_data['Predictions_Predicted']
+        merged_data['Percentage Change'] = (merged_data['Difference'] / merged_data['Per Member Per Month Cost_Actual']) * 100
+
+        # Display the results
+        st.write("Comparison of Actual and Predicted PMPM per Hospital ID")
+        st.dataframe(merged_data[['Hospital ID', 'Per Member Per Month Cost_Actual', 'Predictions_Predicted', 'Difference', 'Percentage Change']])
+
 
 if __name__ == "__main__":
     main()
