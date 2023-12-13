@@ -148,8 +148,16 @@ def main():
                 data_predictions_hospital_id.groupby("Hospital ID").mean().reset_index().round(0)  # Round to nearest dollar
             )
 
-    # Assuming data_actual_costs and data_predictions_hospital_group are already defined
+    # Assuming data_pmpm and data_predictions_hospital_group are already defined
     # Merge the datasets on 'Hospital ID'
+    
+    data_actual_costs = (
+        data_pmpm[["Hospital ID", "Per Member Per Month Cost"]]
+            .groupby("Hospital ID")
+            .mean()
+            .reset_index()
+        ).round(0)
+        
     merged_data = data_actual_costs.merge(
         data_predictions_hospital_group,
         on="Hospital ID",
