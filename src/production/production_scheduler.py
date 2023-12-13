@@ -64,10 +64,10 @@ def load_data_model():
 # Streamlit app layout
 def main():
     # Streamlit title for the initial part of the app
-    st.title("Hospital Drivers Analysis")
+    st.title("PMPM Drivers Analysis")
 
     st.markdown("""
-    This demo uses synthetic data based on a model that predicts emergency room (ER) visits within the last 30 days. The results displayed below represent the average impact of various factors (referred to as 'drivers') on the probability of ER visits within the population.
+    This demo uses synthetic data based on a model that predicts per member per month (PMPM) costs. The results displayed below represent the average impact of various factors (referred to as 'drivers') on PMPM costs.  We also include a what if analysis allowing the users to evaluate changes in their attributed population on PMPM. 
     """)
 
     data_pmpm, data_shap, model = load_data_model()
