@@ -5,3 +5,5 @@ Features
 Analysis of the impact of different drivers on PMPM costs.
 What-if analysis for evaluating changes in populations attributed to hospitals.
 Prediction of PMPM costs based on selected parameters.
+
+Link to streamlit application: https://appuctionschedulerpy-m2pf7v623hbhqmqkhmm7pb.streamlit.app/
