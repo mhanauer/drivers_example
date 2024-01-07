@@ -189,7 +189,7 @@ def main():
     high_cost_members = data_high_cost_members[data_high_cost_members['High Cost Member'] == 1]
 
     # Sort by 'Per Member Per Month Cost' in descending order
-    high_cost_members_sorted = high_cost_members.sort_values('Per Member Per Month Cost', ascending=False)
+    high_cost_members_sorted = high_cost_members.sort_values('Per Member Per Month Cost', ascending=True)
 
     # Convert 'Member ID' to string to treat it as a categorical variable
     high_cost_members_sorted['Member ID'] = high_cost_members_sorted['Member ID'].astype(str)
