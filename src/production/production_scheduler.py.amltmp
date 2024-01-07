@@ -103,7 +103,7 @@ def main():
 
     st.title("PMPM Cost Prediction")
 
-        bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
+    bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
     chol_percentage = st.sidebar.slider('High Cholesterol Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
     diabetes_percentage = st.sidebar.slider('Diabetes Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
     preventive_percentage = st.sidebar.slider('Preventative Services Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
