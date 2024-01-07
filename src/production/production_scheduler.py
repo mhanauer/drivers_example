@@ -106,9 +106,7 @@ def main():
     bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', 0.1, 1.0, 0.1, step=0.1)
     chol_percentage = st.sidebar.slider('High Cholesterol Percentage', 0.1, 1.0, 0.1, step=0.1)
     diabetes_percentage = st.sidebar.slider('Diabetes Percentage', 0.1, 1.0, 0.1, step=0.1)
-    preventive_percentage = st.sidebar.slider('Preventative Services Percentage', 0
-
-.1, 1.0, 0.1, step=0.1)
+    preventive_percentage = st.sidebar.slider('Preventative Services Percentage', 0.1, 1.0, 01,step=0.1)
 
     data_predictions_hospital_group = pd.DataFrame()  # Initialize the variable
 
