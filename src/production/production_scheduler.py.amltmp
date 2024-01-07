@@ -194,31 +194,7 @@ def main():
     # Convert 'Member ID' to string to treat it as a categorical variable
     high_cost_members_sorted['Member ID'] = high_cost_members_sorted['Member ID'].astype(str)
 
-    # Custom CSS to inject contained in a string
-    css_style = """
-    <style>
-    .scrollable-chart {
-        height: 400px; /* Adjust the height as needed */
-        overflow-y: auto; /* Enable vertical scrolling */
-    }
-    </style>
-    """
-
-    # Inject custom CSS with the HTML element
-    st.markdown(css_style, unsafe_allow_html=True)
-
-    # Wrap your Plotly figure in a container with the custom CSS class
-    st.markdown(
-        '<div class="scrollable-chart">', unsafe_allow_html=True
-    )
-    fig = px.bar(high_cost_members_sorted, x='Per Member Per Month Cost', y='Member ID',        orientation='h',
-             labels={'Member ID': 'Member ID', 'Per Member Per Month Cost': 'Per Member Per Month Cost ($)'},
-             title='High Cost Members')
-    st.plotly_chart(fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)  # Close the div opened earlier
-
-
-    
+    st.dataframe(high_cost_members_sorted)
 
 if __name__ == "__main__":
     main()
