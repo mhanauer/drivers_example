@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -6,7 +7,6 @@ import plotly.express as px
 from pyprojroot import here
 import os
 from skimpy import clean_columns
-
 
 def adjust_binary_percentages(df, **column_percentages):
     """
@@ -49,7 +49,6 @@ def adjust_binary_percentages(df, **column_percentages):
 
     return df
 
-
 def load_data_model():
     """
     Load data and model for the Streamlit app.
@@ -59,8 +58,8 @@ def load_data_model():
     data_pmpm = pd.read_csv("data_pmpm.csv")
     data_shap = pd.read_csv("data_shap_hospital.csv")
     model = joblib.load("model_drivers.joblib")
-    return data_pmpm, data_shap, model
-
+    data_high_cost_members = pd.read_csv('data_high_cost_members.csv')
+    return data_pmpm, data_shap, model, data_high_cost_members
 
 def main():
     """
@@ -72,7 +71,7 @@ def main():
     This demo uses synthetic data based on a model that predicts per member per month (PMPM) costs. The results displayed below represent the average impact of various factors (referred to as 'drivers') on PMPM costs. We also include a what if analysis allowing the users to evaluate changes in their attributed population on PMPM. 
     """)
 
-    data_pmpm, data_shap, model = load_data_model()
+    data_pmpm, data_shap, model, data_high_cost_members = load_data_model()
 
     hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data_shap["Hospital ID"].unique())
 
@@ -104,10 +103,11 @@ def main():
 
     st.title("PMPM Cost Prediction")
 
-    bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', 0.1, 1.0, 0.1, step=0.1)
-    chol_percentage = st.sidebar.slider('High Cholesterol Percentage', 0.1, 1.0, 0.1, step=0.1)
-    diabetes_percentage = st.sidebar.slider('Diabetes Percentage', 0.1, 1.0, 0.1, step=0.1)
-    preventive_percentage = st.sidebar.slider('Preventative Services Percentage', 0.1, 1.0, 0.1, step=0.1)
+    bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
+    chol_percentage = st.sidebar.slider('High Cholesterol Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
+    diabetes_percentage = st.sidebar.slider('Diabetes Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
+    preventive_percentage = st.sidebar.slider('Preventative Services Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
+
 
     data_predictions_hospital_group = pd.DataFrame()  # Initialize the variable
 
@@ -182,6 +182,19 @@ def main():
         st.write("Comparison of Actual and Predicted PMPM per Hospital ID")
         st.dataframe(data_predicted_actual)
 
+    # --- New Section for High-Cost Members Analysis ---
+    st.title("High-Cost Members Analysis")
+
+    # Filter out members who meet the high cost threshold
+    high_cost_members = data_high_cost_members[data_high_cost_members['High Cost Member'] == 1]
+
+    # Sort by 'Per Member Per Month Cost' in descending order
+    high_cost_members_sorted = high_cost_members.sort_values('Per Member Per Month Cost', ascending=False)
+
+    # Convert 'Member ID' to string to treat it as a categorical variable
+    high_cost_members_sorted['Member ID'] = high_cost_members_sorted['Member ID'].astype(str)
+
+    st.dataframe(high_cost_members_sorted.drop(columns = 'High Cost Member'), hide_index = True)
 
 if __name__ == "__main__":
     main()
