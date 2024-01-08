@@ -194,7 +194,7 @@ def main():
     # Convert 'Member ID' to string to treat it as a categorical variable
     high_cost_members_sorted['Member ID'] = high_cost_members_sorted['Member ID'].astype(str)
 
-    st.dataframe(high_cost_members_sorted.drop(columns = 'High Cost Member'), hide_index=True)
+    st.dataframe(high_cost_members_sorted.drop(columns = 'High Cost Member'))
 
 if __name__ == "__main__":
     main()
