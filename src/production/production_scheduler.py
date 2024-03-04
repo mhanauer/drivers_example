@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -9,69 +8,52 @@ import os
 from skimpy import clean_columns
 
 def adjust_binary_percentages(df, **column_percentages):
-    """
-    Adjusts the percentage of 1's in each specified column of a binary DataFrame.
-    
-    Args:
-    df (pd.DataFrame): DataFrame with binary values.
-    column_percentages (dict): A dictionary where keys are column names and values are the new desired percentages of 1's.
-    
-    Returns:
-    pd.DataFrame: Modified DataFrame.
-    """
-
     for column, percentage in column_percentages.items():
         if column not in df.columns:
             raise ValueError(f"Column {column} not found in DataFrame")
-
-        # Calculate current percentage of 1's
         current_percentage = df[column].mean()
-
-        # Calculate the desired number of 1's
         target_count = int(df.shape[0] * percentage)
-
-        # Find indices where changes are needed
         ones_indices = df[df[column] == 1].index
         zeros_indices = df[df[column] == 0].index
-
-        if target_count > ones_indices.size:  # Need to add more 1's
+        if target_count > ones_indices.size:
             change_count = target_count - ones_indices.size
-            indices_to_change = np.random.choice(
-                zeros_indices, change_count, replace=False
-            )
+            indices_to_change = np.random.choice(zeros_indices, change_count, replace=False)
             df.loc[indices_to_change, column] = 1
-        else:  # Need to remove some 1's
+        else:
             change_count = ones_indices.size - target_count
-            indices_to_change = np.random.choice(
-                ones_indices, change_count, replace=False
-            )
+            indices_to_change = np.random.choice(ones_indices, change_count, replace=False)
             df.loc[indices_to_change, column] = 0
-
     return df
 
 def load_data_model():
-    """
-    Load data and model for the Streamlit app.
-    """
     path_data = here("./data")
     os.chdir(path_data)
     data_pmpm = pd.read_csv("data_pmpm.csv")
     data_shap = pd.read_csv("data_shap_hospital.csv")
     model = joblib.load("model_drivers.joblib")
     data_high_cost_members = pd.read_csv('data_high_cost_members.csv')
-    return data_pmpm, data_shap, model, data_high_cost_members
+    data_outlier = pd.read_csv('data_outlier.csv')
+    return data_pmpm, data_shap, model, data_high_cost_members, data_outlier
+
+def plot_pmpm_over_time(data, hospital_id):
+    filtered_data = data[data['Hospital ID'] == hospital_id]
+    fig = px.line(
+        filtered_data,
+        x='Year Month',
+        y='PMPM',
+        title=f'PMPM Over Time for Hospital ID {hospital_id}',
+        labels={'Year Month': 'Date', 'PMPM': 'PMPM Cost'}
+    )
+    return fig
 
 def main():
-    """
-    Main function for the Streamlit app.
-    """
     st.title("PMPM Drivers Analysis")
 
     st.markdown("""
     This demo uses synthetic data based on a model that predicts per member per month (PMPM) costs. The results displayed below represent the average impact of various factors (referred to as 'drivers') on PMPM costs. We also include a what if analysis allowing the users to evaluate changes in their attributed population on PMPM. 
     """)
 
-    data_pmpm, data_shap, model, data_high_cost_members = load_data_model()
+    data_pmpm, data_shap, model, data_high_cost_members, data_outlier = load_data_model()
 
     hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data_shap["Hospital ID"].unique())
 
@@ -101,13 +83,18 @@ def main():
     fig.update_traces(texttemplate="%{text}", textposition="inside")
     st.plotly_chart(fig)
 
+    # PMPM over time plot section
+    st.title("PMPM Cost Over Time")
+    hospital_id_time_series = st.sidebar.selectbox("Select Hospital ID for Time Series", options=data_outlier["Hospital ID"].unique(), index=0 if hospital_id not in data_outlier["Hospital ID"].unique() else int(np.where(data_outlier["Hospital ID"].unique() == hospital_id)[0]))
+    pmpm_fig = plot_pmpm_over_time(data_outlier, hospital_id_time_series)
+    st.plotly_chart(pmpm_fig)
+
     st.title("PMPM Cost Prediction")
 
     bp_percentage = st.sidebar.slider('High Blood Pressure Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
     chol_percentage = st.sidebar.slider('High Cholesterol Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
     diabetes_percentage = st.sidebar.slider('Diabetes Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
     preventive_percentage = st.sidebar.slider('Preventative Services Percentage', min_value=0.1, max_value=1.0, value=0.1, step=0.1)
-
 
     data_predictions_hospital_group = pd.DataFrame()  # Initialize the variable
 
