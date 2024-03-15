@@ -7,7 +7,6 @@ import plotly.express as px
 from pyprojroot import here
 import os
 from skimpy import clean_columns
-
 def adjust_binary_percentages(df, **column_percentages):
     """
     Adjusts the percentage of 1's in each specified column of a binary DataFrame.
