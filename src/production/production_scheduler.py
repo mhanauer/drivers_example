@@ -52,7 +52,7 @@ def main():
     This demo uses synthetic data based on a model that predicts per member per month (PMPM) costs. The results displayed below represent the average impact of various factors (referred to as 'drivers') on PMPM costs. We also include a what if analysis allowing the users to evaluate changes in their attributed population on PMPM. 
     """)
 
-    data_pmpm, data_shap, model, data_high_cost_members, data_outlier = load_data_model()
+    data_pmpm, data_shap, model, data_high_cost_members = load_data_model()
 
     hospital_id = st.sidebar.selectbox("Select Hospital ID", options=data_shap["Hospital ID"].unique())
 
