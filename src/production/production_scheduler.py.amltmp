@@ -32,8 +32,7 @@ def load_data_model():
     data_shap = pd.read_csv("data_shap_hospital.csv")
     model = joblib.load("model_drivers.joblib")
     data_high_cost_members = pd.read_csv('data_high_cost_members.csv')
-    data_outlier = pd.read_csv('data_outlier.csv')
-    return data_pmpm, data_shap, model, data_high_cost_members, data_outlier
+    return data_pmpm, data_shap, model, data_high_cost_members
 
 def plot_pmpm_over_time(data, hospital_id):
     filtered_data = data[data['Hospital ID'] == hospital_id]
@@ -83,11 +82,6 @@ def main():
     fig.update_traces(texttemplate="%{text}", textposition="inside")
     st.plotly_chart(fig)
 
-    # PMPM over time plot section
-    st.title("PMPM Cost Over Time")
-    hospital_id_time_series = st.sidebar.selectbox("Select Hospital ID for Time Series", options=data_outlier["Hospital ID"].unique(), index=0 if hospital_id not in data_outlier["Hospital ID"].unique() else int(np.where(data_outlier["Hospital ID"].unique() == hospital_id)[0]))
-    pmpm_fig = plot_pmpm_over_time(data_outlier, hospital_id_time_series)
-    st.plotly_chart(pmpm_fig)
 
     st.title("PMPM Cost Prediction")
 
